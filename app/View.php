@@ -1,5 +1,5 @@
 <?php
-namespace AutoUpload;
+namespace AutoUpdate;
 
 class View
 {
@@ -9,7 +9,7 @@ class View
     public function __construct()
     {
         $this->twig_loader = new \Twig_Loader_Filesystem(
-            'presentation/templates'
+            'presentation/templates/'
         );
         $this->twig = new \Twig_Environment($this->twig_loader);
     }
@@ -17,6 +17,7 @@ class View
     public function show($view = 'update_form.twig')
     {
         // TODO : Ajouter ici les valeurs a afficher
-        echo $this->twig->render($template, $list_infos);
+        $view = 'auth.twig';
+        echo $this->twig->render($view, array());
     }
 }
