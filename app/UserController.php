@@ -17,14 +17,16 @@ class UserController
      * @var Configuration
      */
     private $configuration;
+    private $db_connection;
 
     /**
      * Constructeur
      * @param Configuration $configuration Contient la configuration de la ferme.
      */
-    public function __construct($configuration)
+    public function __construct($configuration, $db_connection)
     {
         $this->configuration = $configuration;
+        $this->db_connection = $db_connection;
     }
 
     /**
@@ -35,7 +37,8 @@ class UserController
      */
     public function login($username, $password)
     {
-
+        $_SESSION['username'] = $username;
+        $_SESSION['logged'] = true;
     }
 
     /**
