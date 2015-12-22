@@ -1,0 +1,18 @@
+<?php
+$version = _t('AU_UNKNOW');
+$link = "?wiki=" . $_GET['wiki'] . "&autoupdate=download";
+$color = "btn-warning";
+
+if (isset($this->wiki->config['wikini_version'])) {
+    $version  = $this->wiki->config['wikini_version'];
+}
+?>
+
+Version du Wiki : <?php print($version); ?>
+
+<?php
+if ($this->wiki->UserIsAdmin()) {
+    echo " " . $GLOBALS['wiki']->Format(
+        "{{button link=\"$link\" text=\"update\" class=\"$color\"}}"
+    );
+}

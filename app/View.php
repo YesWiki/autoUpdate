@@ -3,21 +3,16 @@ namespace AutoUpdate;
 
 class View
 {
-    protected $twig_loader;
-    protected $twig;
+    private $wiki;
+    private $views_path = "tools/yeswiki-tool-autoupdate/presentation/views/";
 
-    public function __construct()
+    public function __construct($wiki)
     {
-        $this->twig_loader = new \Twig_Loader_Filesystem(
-            'presentation/templates/'
-        );
-        $this->twig = new \Twig_Environment($this->twig_loader);
+        $this->wiki = $wiki;
     }
 
-    public function show($view = 'update_form.twig')
+    public function show($view = 'status')
     {
-        // TODO : Ajouter ici les valeurs a afficher
-        $view = 'auth.twig';
-        echo $this->twig->render($view, array());
+        include $this->views_path . "$view.tpl.html";
     }
 }

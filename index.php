@@ -1,9 +1,4 @@
 <?php
-namespace AutoUpdate;
-
-$loader = require __DIR__ . '/vendor/autoload.php';
-
-session_start();
-
-$controller = new Controller();
-$controller->run();
+if (!defined("TOOLS_MANAGER")) {
+    die("Accès direct interdit.");
+}

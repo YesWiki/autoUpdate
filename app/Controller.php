@@ -12,69 +12,47 @@ namespace AutoUpdate;
  */
 class Controller
 {
-    private $config;
-    private $user_controller;
-    private $db_connection;
+    private $wiki;
 
-    public function __construct()
+    public function __construct($wiki_instance)
     {
-        $this->config = new Configuration('../../wakka.config.php');
-        $this->user_controller = new UserController($this->config);
+
+        $this->wiki = $wiki_instance;
     }
 
     public function run()
     {
+        $view = new View($this->wiki);
 
-        if (isset($_GET['action'])) {
-            switch ($_GET['action']) {
-                case 'login':
-                    if (isset($_POST['username'])
-                        and isset($_POST['password'])
-                    ) {
-                        $this->user_controller->login(
-                            $_POST['username'],
-                            $_POST['password']
-                        );
-                    }
-                    break;
-
-                default:
-                    # code...
-                    break;
-            }
+        if (!isset($_GET['autoupdate'])) {
+            $_GET['autoupdate'] = "default";
         }
 
-        $view = new View('auth.twig');
-        $view->Show();
+        switch ($_GET['autoupdate']) {
+            case 'download':
+                if ($this->actionDownload()
+                    and $this->wiki->UserIsAdmin()
+                ) {
+                    $view->show('download_ok');
+                } else {
+                    $view->show('download_error');
+                }
+                break;
+
+            case 'updatetool':
+                break;
+
+            case 'update':
+                break;
+
+            default:
+                $view->show('status');
+                break;
+        }
     }
 
-    private function dbConnect()
+    private function actionDownload()
     {
-        $yeswiki_config = new Configuration('../../wakka.config.php');
-        if (!is_null($this->db_connection)) {
-            return $this->db_connection;
-        }
-
-        $dsn = 'mysql:host='
-        . $this->yeswiki_config['mysql_host']
-        . ';dbname='
-        . $this->yeswiki_config['mysql_database']
-            . ';';
-
-        try {
-            $this->db_connexion = new \PDO(
-                $dsn,
-                $this->yeswiki_config['db_user'],
-                $this->yeswiki_config['db_password']
-            );
-            return $this->db_connexion;
-        } catch (\PDOException $e) {
-            throw new \Exception(
-                "Impossible de se connecter à la base de donnée : "
-                . $e->getMessage(),
-                1
-            );
-        }
-
+        return true;
     }
 }
