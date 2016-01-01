@@ -1,18 +1,14 @@
 <?php
-$version = _t('AU_UNKNOW');
-$link = "?wiki=" . $_GET['wiki'] . "&autoupdate=download";
-$color = "btn-warning";
-
-if (isset($this->wiki->config['wikini_version'])) {
-    $version  = $this->wiki->config['wikini_version'];
-}
+    $link = "?wiki=" . $_GET['wiki'] . "&autoupdate=upgrade";
+    $color = "btn-warning";
+    $version  = $this->au->getWikiVersion();
 ?>
 
 Version du Wiki : <?php print($version); ?>
 
-<?php
-if ($this->wiki->UserIsAdmin()) {
-    echo " " . $GLOBALS['wiki']->Format(
-        "{{button link=\"$link\" text=\"update\" class=\"$color\"}}"
-    );
-}
+<?php if ($this->au->isAdmin() and $this->au->isNewVersion()) { ?>
+    <a  href="<?php print($link); ?>" 
+        class="btn btn-warning" title="<?php print(_t('AU_UPDATE')); ?>">
+        <?php print(_t('AU_UPDATE')); ?>
+    </a>
+<?php } 

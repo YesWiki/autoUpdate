@@ -3,16 +3,17 @@ namespace AutoUpdate;
 
 class View
 {
-    private $wiki;
+    private $au;
     private $views_path = "tools/yeswiki-tool-autoupdate/presentation/views/";
 
-    public function __construct($wiki)
+    public function __construct($autoupdate)
     {
-        $this->wiki = $wiki;
+        $this->au = $autoupdate;
     }
 
     public function show($view = 'status')
     {
+        $messages = new Messages();
         include $this->views_path . "$view.tpl.html";
     }
 }

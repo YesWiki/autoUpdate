@@ -12,37 +12,71 @@ namespace AutoUpdate;
  */
 class Controller
 {
-    private $wiki;
+    private $au;
+    private $messages;
 
     public function __construct($wiki_instance)
     {
-
-        $this->wiki = $wiki_instance;
+        $this->au = new AutoUpdate($wiki_instance);
+        $this->messages = new Messages($wiki_instance);
     }
 
     public function run()
     {
-        $view = new View($this->wiki);
+        $view = new View($this->au);
 
         if (!isset($_GET['autoupdate'])) {
             $_GET['autoupdate'] = "default";
         }
 
         switch ($_GET['autoupdate']) {
-            case 'download':
-                if ($this->actionDownload()
-                    and $this->wiki->UserIsAdmin()
-                ) {
-                    $view->show('download_ok');
-                } else {
-                    $view->show('download_error');
+            case 'upgrade':
+                if ($this->au->isAdmin()) {
+
+                    // Remise a zéro des messages
+                    $this->messages->reset();
+
+                    // Télécahrgement de l'archive
+                    $file = $this->au->download();
+                    if (false !== $file) {
+                        $this->messages->add('AU_DOWNLOAD', 'AU_OK');
+
+                    } else {
+                        $this->messages->add('AU_DOWNLOAD', 'AU_ERROR');
+                        $view->show('update');
+                        break;
+                    }
+
+                    // Vérification MD5
+                    // TODO
+
+                    // Extraction de l'archive
+                    $path = $this->au->extract($file);
+                    if (false !== $path) {
+                        $this->messages->add('AU_EXTRACT', 'AU_OK');
+                    } else {
+                        $this->messages->add('AU_EXTRACT', 'AU_ERROR');
+                        $view->show('update');
+                        break;
+                    }
+
+                    // Mise à jour du coeur du wiki
+                    /*if ($this->au->upgrade($path)) {
+                    $this->messages->add('AU_EXTRACT', 'AU_OK');
+                    } else {
+                    $this->messages->add('AU_EXTRACT', 'AU_ERROR');
+                    $view->show('update');
+                    }*/
+
+                    // Mise à jour des tools.
+                    /*if ($this->au->upgradeTools($path)) {
+                    $this->messages->add('AU_EXTRACT', 'AU_OK');
+                    } else {
+                    $this->messages->add('AU_EXTRACT', 'AU_ERROR');
+                    $view->show('update');
+                    }*/
+                    $view->show('update');
                 }
-                break;
-
-            case 'updatetool':
-                break;
-
-            case 'update':
                 break;
 
             default:
@@ -51,8 +85,17 @@ class Controller
         }
     }
 
-    private function actionDownload()
+    private function reload($args = null)
     {
-        return true;
+        $url = "?wiki=" . $_GET['wiki'];
+        if (!is_null($args) and is_array($args)) {
+            foreach ($args as $arg => $value) {
+                $url .= '&' . $arg . '=' . $value;
+            }
+        }
+
+        header("Location: " . $url);
+        exit();
     }
+
 }
