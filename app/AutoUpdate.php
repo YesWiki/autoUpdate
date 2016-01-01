@@ -24,7 +24,6 @@ class AutoUpdate
 
     public function extract($file)
     {
-        $file = $this->getWikiDir() . '/' . $file;
         $path = $this->tmpdir();
 
         $zip = new \ZipArchive;
@@ -36,7 +35,7 @@ class AutoUpdate
         }
         $zip->close();
 
-        return $path . '/yeswiki';
+        return $path;
     }
 
     public function upgrade($path)
