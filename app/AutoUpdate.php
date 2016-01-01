@@ -40,7 +40,20 @@ class AutoUpdate
 
     public function upgrade($path)
     {
-        return false;
+        $src_path = $path . '/yeswiki';
+        $des_path = $this->getWikiDir();
+
+        $file_to_ignore = array(
+            '.',
+            '..',
+            'tools',
+            'files',
+            'cache',
+            'themes',
+            'wakka.config.php',
+        );
+
+        return $this->upgradeFolder($src_path, $des_path, $file_to_ignore);
     }
 
     public function upgradeTools($path)
@@ -96,5 +109,67 @@ class AutoUpdate
 
         mkdir($path);
         return $path;
+    }
+
+    private function upgradeFolder($src, $des, $file_to_ignore = null)
+    {
+
+        if (is_file($src)) {
+            return copy($src, $des);
+        }
+
+        if (!is_array($file_to_ignore)) {
+            $file_to_ignore = array('.', '..');
+        }
+
+        if ($res = opendir($src)) {
+            while (($file = readdir($res)) !== false) {
+                // Ignore les fichiers de la liste
+                if (in_array($file, $file_to_ignore)) {
+                    continue;
+                }
+
+                $src_file = $src . '/' . $file;
+                $des_file = $des . '/' . $file;
+
+                if (is_dir($des_file) === true) {
+                    $this->deleteFolder($des_file);
+                } else {
+                    unlink($des_file);
+                }
+
+                rename($src_file, $src_file);
+
+            }
+            closedir($res);
+        }
+
+        return true;
+    }
+
+    private function deleteFolder($path, $depth = 0)
+    {
+        $file_to_ignore = array('.', '..');
+
+        if ($res = opendir($path)) {
+            while (($file = readdir($res)) !== false) {
+
+                if (in_array($file, $file_to_ignore)) {
+                    continue;
+                }
+
+                $file = $path . '/' . $file;
+
+                if (is_dir($file) === true) {
+                    $this->deleteFolder($file, $depth + 1);
+                }
+
+                if (is_file($file) === true) {
+                    unlink($file);
+                }
+            }
+            closedir($res);
+        }
+        rmdir($path);
     }
 }

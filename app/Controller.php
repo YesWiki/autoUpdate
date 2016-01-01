@@ -61,12 +61,13 @@ class Controller
                     }
 
                     // Mise à jour du coeur du wiki
-                    /*if ($this->au->upgrade($path)) {
-                    $this->messages->add('AU_EXTRACT', 'AU_OK');
+                    if ($this->au->upgrade($path)) {
+                        $this->messages->add('AU_UPDATE_YESWIKI', 'AU_OK');
                     } else {
-                    $this->messages->add('AU_EXTRACT', 'AU_ERROR');
-                    $view->show('update');
-                    }*/
+                        $this->messages->add('AU_UPDATE_YESWIKI', 'AU_ERROR');
+                        $view->show('update');
+                        break;
+                    }
 
                     // Mise à jour des tools.
                     /*if ($this->au->upgradeTools($path)) {
@@ -74,6 +75,7 @@ class Controller
                     } else {
                     $this->messages->add('AU_EXTRACT', 'AU_ERROR');
                     $view->show('update');
+                    break;
                     }*/
                     $view->show('update');
                 }
