@@ -79,8 +79,8 @@ class AutoUpdate
 
     public function getWikiVersion()
     {
-        if (isset($this->wiki->config['wikini_version'])) {
-            return $this->wiki->config['wikini_version'];
+        if (isset($this->wiki->config['yeswiki_release'])) {
+            return $this->wiki->config['yeswiki_release'];
         }
         return _t('AU_UNKNOW');
     }
