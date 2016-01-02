@@ -12,18 +12,18 @@ namespace AutoUpdate;
  */
 class Controller
 {
-    private $autoupload;
+    private $autoUpdate;
     private $messages;
 
     public function __construct($wikiInstance)
     {
-        $this->autoupload = new AutoUpdate($wikiInstance);
+        $this->autoUpdate = new AutoUpdate($wikiInstance);
         $this->messages = new Messages($wikiInstance);
     }
 
     public function run($get)
     {
-        $view = new View($this->autoupload);
+        $view = new View($this->autoUpdate);
 
         if (!isset($get['autoupdate'])) {
             $get['autoupdate'] = "default";
@@ -31,13 +31,13 @@ class Controller
 
         switch ($get['autoupdate']) {
             case 'upgrade':
-                if ($this->autoupload->isAdmin()) {
+                if ($this->autoUpdate->isAdmin()) {
 
                     // Remise a zéro des messages
                     $this->messages->reset();
 
                     // Télécahrgement de l'archive
-                    $file = $this->autoupload->download();
+                    $file = $this->autoUpdate->download();
                     if (false === $file) {
                         $this->messages->add('AU_DOWNLOAD', 'AU_ERROR');
                         $view->show('update');
@@ -49,7 +49,7 @@ class Controller
                     // TODO
 
                     // Extraction de l'archive
-                    $path = $this->autoupload->extract($file);
+                    $path = $this->autoUpdate->extract($file);
                     if (false === $path) {
                         $this->messages->add('AU_EXTRACT', 'AU_ERROR');
                         $view->show('update');
@@ -58,7 +58,7 @@ class Controller
                     $this->messages->add('AU_EXTRACT', 'AU_OK');
 
                     // Mise à jour du coeur du wiki
-                    if (!$this->autoupload->upgrade($path)) {
+                    if (!$this->autoUpdate->upgradeCore($path)) {
                         $this->messages->add('AU_UPDATE_YESWIKI', 'AU_ERROR');
                         $view->show('update');
                         break;
@@ -66,12 +66,12 @@ class Controller
                     $this->messages->add('AU_UPDATE_YESWIKI', 'AU_OK');
 
                     // Mise à jour des tools.
-                    /*if (!$this->autoupload->upgradeTools($path)) {
+                    if (!$this->autoUpdate->upgradeTools($path)) {
                         $this->messages->add('AU_UPDATE_TOOL', 'AU_ERROR');
                         $view->show('update');
                         break;
                     }
-                    $this->messages->add('AU_UPDATE_TOOL', 'AU_OK');*/
+                    $this->messages->add('AU_UPDATE_TOOL', 'AU_OK');
 
                     $view->show('update');
                 }

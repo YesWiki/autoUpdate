@@ -38,30 +38,43 @@ class AutoUpdate
         return $path;
     }
 
-    public function upgrade($path)
+    public function upgradeCore($path)
     {
         $src = $path . '/yeswiki';
         $des = $this->getWikiDir();
 
-        $file2ignore = array(
-            '.',
-            '..',
-            'tools',
-            'files',
-            'cache',
-            'themes',
-            'wakka.config.php',
-        );
+        $file2ignore = array('.', '..', 'tools', 'files', 'cache', 'themes',
+            'wakka.config.php');
 
-        return $this->upgradeFolder($src, $des, $file2ignore);
+        if ($res = opendir($src)) {
+            while (($file = readdir($res)) !== false) {
+                // Ignore les fichiers de la liste
+                if (!in_array($file, $file2ignore)) {
+                    $this->copy($src . '/' . $file, $des . '/' . $file);
+                }
+            }
+            closedir($res);
+        }
+        return true;
     }
 
     public function upgradeTools($path)
     {
         $src = $path . '/yeswiki/tools';
         $des = $this->getWikiDir() . '/tools';
+        $file2ignore = array('.', '..');
 
-        return $this->upgradeFolder($src, $des);
+        // TODO : Ajouter un message par outils mis à jour.
+        if ($res = opendir($src)) {
+            while (($file = readdir($res)) !== false) {
+                // Ignore les fichiers de la liste
+                if (!in_array($file, $file2ignore)) {
+                    $this->copy($src . '/' . $file, $des . '/' . $file);
+                }
+            }
+            closedir($res);
+        }
+        return true;
     }
 
     public function getWikiVersion()
@@ -70,7 +83,6 @@ class AutoUpdate
             return $this->wiki->config['wikini_version'];
         }
         return _t('AU_UNKNOW');
-
     }
 
     public function isNewVersion()
@@ -109,99 +121,62 @@ class AutoUpdate
         return $path;
     }
 
-    private function upgradeFolder($srcPath, $desPath, $file2ignore = null)
+    private function delete($path)
     {
-
-        if (is_file($srcPath)) {
-            return copy($srcPath, $desPath);
-        }
-
-        if (!is_array($file2ignore)) {
-            $file2ignore = array('.', '..');
-        }
-
-        if ($res = opendir($srcPath)) {
-            while (($file = readdir($res)) !== false) {
-                // Ignore les fichiers de la liste
-                if (in_array($file, $file2ignore)) {
-                    continue;
-                }
-
-                $srcFile = $srcPath . '/' . $file;
-                $desFile = $desPath . '/' . $file;
-
-                if (is_dir($desFile) === true) {
-                    $this->deleteFolder($desFile);
-                } elseif (isFile($desFile) === true) {
-                    unlink($desFile);
-                }
-
-                print('<pre>');
-                print_r($srcFile);
-                print(" vers : ");
-                print_r($desFile);
-                print('</pre>');
-
-                rename($srcFile, $desFile);
-
+        if (is_file($path)) {
+            if (unlink($path)) {
+                return true;
             }
-            closedir($res);
+            return false;
         }
-
-        return true;
+        if (is_dir($path)) {
+            return $this->deleteFolder($path);
+        }
     }
 
-    private function deleteFolder($path, $depth = 0)
+    private function copy($src, $des)
+    {
+        if (is_file($des) or is_dir($des) or is_link($des)) {
+            $this->delete($des);
+        }
+        if (is_file($src)) {
+            return copy($src, $des);
+        }
+        if (is_dir($src)) {
+            if (!mkdir($des)) {
+                return false;
+            }
+            return $this->copyFolder($src, $des);
+        }
+        return false;
+    }
+
+    private function deleteFolder($path)
     {
         $file2ignore = array('.', '..');
-
         if ($res = opendir($path)) {
             while (($file = readdir($res)) !== false) {
-
-                if (in_array($file, $file2ignore)) {
-                    continue;
-                }
-
-                $file = $path . '/' . $file;
-
-                if (is_dir($file) === true) {
-                    $this->deleteFolder($file, $depth + 1);
-                }
-
-                if (is_file($file) === true) {
-                    unlink($file);
+                if (!in_array($file, $file2ignore)) {
+                    $this->delete($path . '/' . $file);
                 }
             }
             closedir($res);
         }
         rmdir($path);
+        return true;
     }
 
-    // Necessaire car la fonction rename ne fonctionne pas entre plusieurs
-    // partitions
-    private function copyFolder($srcPath, $desPath, $depth = 0)
+    private function copyFolder($srcPath, $desPath)
     {
         $file2ignore = array('.', '..');
-
         if ($res = opendir($srcPath)) {
             while (($file = readdir($res)) !== false) {
-
-                if (in_array($file, $file2ignore)) {
-                    continue;
-                }
-
-                $srcFile = $srcPath . '/' . $file;
-                $desFile = $desPath . '/' . $file;
-
-                if (is_dir($srcFile) === true) {
-                    $this->copyFolder($srcFile, $desFile, $depth + 1);
-                }
-
-                if (isFile($file) === true) {
-                    copy($srcFile, $desPath);
+                if (!in_array($file, $file2ignore)) {
+                    $this->copy($srcPath . '/' . $file, $desPath . '/' . $file);
                 }
             }
             closedir($res);
         }
+        return true;
     }
 }
