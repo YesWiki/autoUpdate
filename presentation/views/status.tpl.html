@@ -1,14 +1,14 @@
 <?php
     $link = "?wiki=" . $_GET['wiki'] . "&autoupdate=upgrade";
     $color = "btn-warning";
-    $version  = $this->au->getWikiVersion();
+    $version  = $this->autoUpdate->getWikiVersion();
 ?>
 
 Version du Wiki : <?php print($version); ?>
 
-<?php if ($this->au->isAdmin() and $this->au->isNewVersion()) { ?>
-    <a  href="<?php print($link); ?>" 
+<?php if ($this->autoUpdate->isAdmin() and $this->autoUpdate->isNewVersion()) { ?>
+    <a  href="<?php print($link); ?>"
         class="btn btn-warning" title="<?php print(_t('AU_UPDATE')); ?>">
         <?php print(_t('AU_UPDATE')); ?>
     </a>
-<?php } 
+<?php }

@@ -3,12 +3,12 @@ namespace AutoUpdate;
 
 class View
 {
-    private $autoupload;
+    private $autoUpdate;
     private $viewsPath = "tools/yeswiki-tool-autoupdate/presentation/views/";
 
-    public function __construct($autoupdate)
+    public function __construct($autoUpdate)
     {
-        $this->autoupload = $autoupdate;
+        $this->autoUpdate = $autoUpdate;
     }
 
     public function show($view = 'status')
