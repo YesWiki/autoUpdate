@@ -40,10 +40,10 @@ class AutoUpdate
 
     public function upgrade($path)
     {
-        $src_path = $path . '/yeswiki';
-        $des_path = $this->getWikiDir();
+        $src = $path . '/yeswiki';
+        $des = $this->getWikiDir();
 
-        $file_to_ignore = array(
+        $file2ignore = array(
             '.',
             '..',
             'tools',
@@ -53,17 +53,15 @@ class AutoUpdate
             'wakka.config.php',
         );
 
-        return $this->upgradeFolder($src_path, $des_path, $file_to_ignore);
+        return $this->upgradeFolder($src, $des, $file2ignore);
     }
 
     public function upgradeTools($path)
     {
-        return false;
-    }
+        $src = $path . '/yeswiki/tools';
+        $des = $this->getWikiDir() . '/tools';
 
-    private function upgradeTool($name, $path)
-    {
-        return false;
+        return $this->upgradeFolder($src, $des);
     }
 
     public function getWikiVersion()
@@ -111,34 +109,40 @@ class AutoUpdate
         return $path;
     }
 
-    private function upgradeFolder($src, $des, $file_to_ignore = null)
+    private function upgradeFolder($srcPath, $desPath, $file2ignore = null)
     {
 
-        if (is_file($src)) {
-            return copy($src, $des);
+        if (is_file($srcPath)) {
+            return copy($srcPath, $desPath);
         }
 
-        if (!is_array($file_to_ignore)) {
-            $file_to_ignore = array('.', '..');
+        if (!is_array($file2ignore)) {
+            $file2ignore = array('.', '..');
         }
 
-        if ($res = opendir($src)) {
+        if ($res = opendir($srcPath)) {
             while (($file = readdir($res)) !== false) {
                 // Ignore les fichiers de la liste
-                if (in_array($file, $file_to_ignore)) {
+                if (in_array($file, $file2ignore)) {
                     continue;
                 }
 
-                $src_file = $src . '/' . $file;
-                $des_file = $des . '/' . $file;
+                $srcFile = $srcPath . '/' . $file;
+                $desFile = $desPath . '/' . $file;
 
-                if (is_dir($des_file) === true) {
-                    $this->deleteFolder($des_file);
-                } else {
-                    unlink($des_file);
+                if (is_dir($desFile) === true) {
+                    $this->deleteFolder($desFile);
+                } elseif (isFile($desFile) === true) {
+                    unlink($desFile);
                 }
 
-                rename($src_file, $src_file);
+                print('<pre>');
+                print_r($srcFile);
+                print(" vers : ");
+                print_r($desFile);
+                print('</pre>');
+
+                rename($srcFile, $desFile);
 
             }
             closedir($res);
@@ -149,12 +153,12 @@ class AutoUpdate
 
     private function deleteFolder($path, $depth = 0)
     {
-        $file_to_ignore = array('.', '..');
+        $file2ignore = array('.', '..');
 
         if ($res = opendir($path)) {
             while (($file = readdir($res)) !== false) {
 
-                if (in_array($file, $file_to_ignore)) {
+                if (in_array($file, $file2ignore)) {
                     continue;
                 }
 
@@ -171,5 +175,33 @@ class AutoUpdate
             closedir($res);
         }
         rmdir($path);
+    }
+
+    // Necessaire car la fonction rename ne fonctionne pas entre plusieurs
+    // partitions
+    private function copyFolder($srcPath, $desPath, $depth = 0)
+    {
+        $file2ignore = array('.', '..');
+
+        if ($res = opendir($srcPath)) {
+            while (($file = readdir($res)) !== false) {
+
+                if (in_array($file, $file2ignore)) {
+                    continue;
+                }
+
+                $srcFile = $srcPath . '/' . $file;
+                $desFile = $desPath . '/' . $file;
+
+                if (is_dir($srcFile) === true) {
+                    $this->copyFolder($srcFile, $desFile, $depth + 1);
+                }
+
+                if (isFile($file) === true) {
+                    copy($srcFile, $desPath);
+                }
+            }
+            closedir($res);
+        }
     }
 }

@@ -4,7 +4,7 @@ namespace AutoUpdate;
 /**
  * Classe Controller
  *
- * gère les entrées ($_POST et $_GET)
+ * gère les entrées ($_POST et $get)
  * @package AutoUpload
  * @author  Florestan Bredow <florestan.bredow@supagro.fr>
  * @version 0.0.1 (Git: $Id$)
@@ -12,71 +12,67 @@ namespace AutoUpdate;
  */
 class Controller
 {
-    private $au;
+    private $autoupload;
     private $messages;
 
-    public function __construct($wiki_instance)
+    public function __construct($wikiInstance)
     {
-        $this->au = new AutoUpdate($wiki_instance);
-        $this->messages = new Messages($wiki_instance);
+        $this->autoupload = new AutoUpdate($wikiInstance);
+        $this->messages = new Messages($wikiInstance);
     }
 
-    public function run()
+    public function run($get)
     {
-        $view = new View($this->au);
+        $view = new View($this->autoupload);
 
-        if (!isset($_GET['autoupdate'])) {
-            $_GET['autoupdate'] = "default";
+        if (!isset($get['autoupdate'])) {
+            $get['autoupdate'] = "default";
         }
 
-        switch ($_GET['autoupdate']) {
+        switch ($get['autoupdate']) {
             case 'upgrade':
-                if ($this->au->isAdmin()) {
+                if ($this->autoupload->isAdmin()) {
 
                     // Remise a zéro des messages
                     $this->messages->reset();
 
                     // Télécahrgement de l'archive
-                    $file = $this->au->download();
-                    if (false !== $file) {
-                        $this->messages->add('AU_DOWNLOAD', 'AU_OK');
-
-                    } else {
+                    $file = $this->autoupload->download();
+                    if (false === $file) {
                         $this->messages->add('AU_DOWNLOAD', 'AU_ERROR');
                         $view->show('update');
                         break;
                     }
+                    $this->messages->add('AU_DOWNLOAD', 'AU_OK');
 
                     // Vérification MD5
                     // TODO
 
                     // Extraction de l'archive
-                    $path = $this->au->extract($file);
-                    if (false !== $path) {
-                        $this->messages->add('AU_EXTRACT', 'AU_OK');
-                    } else {
+                    $path = $this->autoupload->extract($file);
+                    if (false === $path) {
                         $this->messages->add('AU_EXTRACT', 'AU_ERROR');
                         $view->show('update');
                         break;
                     }
+                    $this->messages->add('AU_EXTRACT', 'AU_OK');
 
                     // Mise à jour du coeur du wiki
-                    if ($this->au->upgrade($path)) {
-                        $this->messages->add('AU_UPDATE_YESWIKI', 'AU_OK');
-                    } else {
+                    if (!$this->autoupload->upgrade($path)) {
                         $this->messages->add('AU_UPDATE_YESWIKI', 'AU_ERROR');
                         $view->show('update');
                         break;
                     }
+                    $this->messages->add('AU_UPDATE_YESWIKI', 'AU_OK');
 
                     // Mise à jour des tools.
-                    /*if ($this->au->upgradeTools($path)) {
-                    $this->messages->add('AU_EXTRACT', 'AU_OK');
-                    } else {
-                    $this->messages->add('AU_EXTRACT', 'AU_ERROR');
-                    $view->show('update');
-                    break;
-                    }*/
+                    /*if (!$this->autoupload->upgradeTools($path)) {
+                        $this->messages->add('AU_UPDATE_TOOL', 'AU_ERROR');
+                        $view->show('update');
+                        break;
+                    }
+                    $this->messages->add('AU_UPDATE_TOOL', 'AU_OK');*/
+
                     $view->show('update');
                 }
                 break;
@@ -86,18 +82,4 @@ class Controller
                 break;
         }
     }
-
-    private function reload($args = null)
-    {
-        $url = "?wiki=" . $_GET['wiki'];
-        if (!is_null($args) and is_array($args)) {
-            foreach ($args as $arg => $value) {
-                $url .= '&' . $arg . '=' . $value;
-            }
-        }
-
-        header("Location: " . $url);
-        exit();
-    }
-
 }

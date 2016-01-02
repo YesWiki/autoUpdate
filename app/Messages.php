@@ -56,9 +56,9 @@ class Messages implements \ArrayAccess, \Iterator, \Countable
     {
         if (is_null($offset)) {
             $_SESSION['messages'][] = $value;
-        } else {
-            $_SESSION['messages'][$offset] = $value;
+            return;
         }
+        $_SESSION['messages'][$offset] = $value;
     }
 
     /*************************************************************************

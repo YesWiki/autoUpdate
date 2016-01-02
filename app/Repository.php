@@ -20,22 +20,22 @@ class Repository
      * @param  string $repo_version  [description]
      * @return [type]                [description]
      */
-    public function compareVersion($local_version, $repo_version = 'stable')
+    public function compareVersion($localVersion, $repoVersion = 'stable')
     {
-        if ($local_version === $this->data[$repo_version]['version']) {
+        if ($localVersion === $this->data[$repoVersion]['version']) {
             return 0;
         }
 
-        $repo_version = $this->evalVersion(
-            $this->data[$repo_version]['version']
+        $repoVersion = $this->evalVersion(
+            $this->data[$repoVersion]['version']
         );
 
-        $local_version = $this->evalVersion(
-            $local_version
+        $localVersion = $this->evalVersion(
+            $localVersion
         );
 
         for ($i = 0; $i < 3; $i++) {
-            if ($repo_version[$i] > $local_version[$i]) {
+            if ($repoVersion[$i] > $localVersion[$i]) {
                 return $i + 1;
             }
         }
@@ -48,16 +48,16 @@ class Repository
             $version = 'stable';
         }
 
-        $destination_file = tempnam(sys_get_temp_dir(), 'yeswiki_');
-        $source_url = $this->address . $this->data[$version]['file'];
+        $destinationFile = tempnam(sys_get_temp_dir(), 'yeswiki_');
+        $sourceUrl = $this->address . $this->data[$version]['file'];
 
         $this->downloadFile(
-            $source_url,
-            $destination_file
+            $sourceUrl,
+            $destinationFile
         );
 
-        if (is_file($destination_file)) {
-            return $destination_file;
+        if (is_file($destinationFile)) {
+            return $destinationFile;
         }
 
         return false;
@@ -67,12 +67,12 @@ class Repository
     {
         $this->data = array();
 
-        $repo_info_file = $this->address . 'infos.json';
-        if (($repo_info = file_get_contents($repo_info_file)) === false) {
+        $repoInfosFile = $this->address . 'infos.json';
+        if (($repoInfos = file_get_contents($repoInfosFile)) === false) {
             return false;
         }
 
-        $this->data = json_decode($repo_info, true);
+        $this->data = json_decode($repoInfos, true);
 
         if (is_null($this->data)) {
             return false;
@@ -86,11 +86,11 @@ class Repository
         return explode('.', $version);
     }
 
-    private function downloadFile($source_url, $destination)
+    private function downloadFile($sourceUrl, $destination)
     {
         file_put_contents(
             $destination,
-            fopen($source_url, 'r')
+            fopen($sourceUrl, 'r')
         );
     }
 }

@@ -8,4 +8,4 @@ if (!defined("WIKINI_VERSION")) {
 }
 
 $controller = new Controller($this);
-$controller->run();
+$controller->run($_GET);
