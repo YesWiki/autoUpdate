@@ -42,6 +42,14 @@ class Repository
         return -1;
     }
 
+    public function getMD5($version = 'stable')
+    {
+        $disMd5File = file_get_contents(
+            $this->address . $this->data[$version]['file'] . '.md5'
+        );
+        return explode('  ', $disMd5File)[0];
+    }
+
     public function getFile($version = 'stable')
     {
         if ('unstable' !== $version) {

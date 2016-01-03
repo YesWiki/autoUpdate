@@ -1,6 +1,6 @@
 TODO
 
-[ ] Vérifier MD5
+[X] Vérifier MD5
 [ ] Vérifier les droits sur les fichiers avant la mise à jour.
 [ ] Mettre à jour le numéro de version dans wakka.config.php a la fin de la
 mise a jour.

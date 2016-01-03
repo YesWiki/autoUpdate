@@ -36,6 +36,9 @@ class Controller
                     // Remise a zéro des messages
                     $this->messages->reset();
 
+                    // Vérification des droits sur le fichiers
+                    // TODO
+
                     // Télécahrgement de l'archive
                     $file = $this->autoUpdate->download();
                     if (false === $file) {
@@ -46,7 +49,12 @@ class Controller
                     $this->messages->add('AU_DOWNLOAD', 'AU_OK');
 
                     // Vérification MD5
-                    // TODO
+                    if (!$this->autoUpdate->checkIntegrity($file)) {
+                        $this->messages->add('AU_INTEGRITY', 'AU_ERROR');
+                        $view->show('update');
+                        break;
+                    }
+                    $this->messages->add('AU_INTEGRITY', 'AU_OK');
 
                     // Extraction de l'archive
                     $path = $this->autoUpdate->extract($file);

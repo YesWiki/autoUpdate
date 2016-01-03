@@ -38,6 +38,14 @@ class AutoUpdate
         return $path;
     }
 
+    public function checkIntegrity($path)
+    {
+        $repo = new Repository($this->getRepositoryAddress());
+        $repoMD5 = $repo->getMD5();
+        $md5File = md5_file($path);
+        return ($md5File === $repoMD5);
+    }
+
     public function upgradeCore($path)
     {
         $src = $path . '/yeswiki';

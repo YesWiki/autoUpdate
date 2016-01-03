@@ -12,6 +12,7 @@ $GLOBALS['translations'] = array_merge(
         'AU_UNKNOW' => 'Inconnue',
         'AU_DOWNLOAD' => "Téléchargement de l'archive",
         'AU_EXTRACT' => "Extraction de l'archive",
+        'AU_INTEGRITY' => "Vérification de l'intégrité de l'archive",
         'AU_DECOMPRESSION' => "Décompression de l'archive",
         'AU_UPDATE_TOOL' => "Mise à jour du tool autoupdate",
         'AU_UPDATE_YESWIKI' => "Mise à jour du wiki",
