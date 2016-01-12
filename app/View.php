@@ -4,12 +4,14 @@ namespace AutoUpdate;
 class View
 {
     private $autoUpdate;
+    private $messages;
     private $viewsPath = "tools/yeswiki-tool-autoupdate/presentation/views/";
     protected $twig;
 
-    public function __construct($autoUpdate)
+    public function __construct($autoUpdate, $messages)
     {
         $this->autoUpdate = $autoUpdate;
+        $this->messages = $messages;
         $twigLoader = new \Twig_Loader_Filesystem($this->viewsPath);
         $this->twig = new \Twig_Environment($twigLoader);
     }
@@ -34,7 +36,7 @@ class View
         $infos['AU_VERSION_REPO'] = _t('AU_VERSION_REPO');
         $infos['AU_VERSION_WIKI'] = _t('AU_VERSION_WIKI');
 
-        $infos['messages'] = new Messages();
+        $infos['messages'] = $this->messages;
         return $infos;
     }
 }

@@ -3,29 +3,35 @@ namespace AutoUpdate;
 
 class Messages implements \ArrayAccess, \Iterator, \Countable
 {
+    private $messages;
+
+    public function __construct()
+    {
+        $this->messages = array();
+    }
 
     /*************************************************************************
      * Iterator
      ************************************************************************/
     public function rewind()
     {
-        return reset($_SESSION['messages']);
+        return reset($this->messages);
     }
     public function current()
     {
-        return current($_SESSION['messages']);
+        return current($this->messages);
     }
     public function key()
     {
-        return key($_SESSION['messages']);
+        return key($this->messages);
     }
     public function valid()
     {
-        return isset($_SESSION['messages'][$this->key()]);
+        return isset($this->messages[$this->key()]);
     }
     public function next()
     {
-        return next($_SESSION['messages']);
+        return next($this->messages);
     }
 
     /*************************************************************************
@@ -33,7 +39,7 @@ class Messages implements \ArrayAccess, \Iterator, \Countable
      ************************************************************************/
     public function count()
     {
-        return count($_SESSION['messages']);
+        return count($this->messages);
     }
 
     /*************************************************************************
@@ -41,24 +47,24 @@ class Messages implements \ArrayAccess, \Iterator, \Countable
      ************************************************************************/
     public function offsetExists($offset)
     {
-        return isset($_SESSION['messages'][$offset]);
+        return isset($this->messages[$offset]);
     }
     public function offsetUnset($offset)
     {
-        unset($_SESSION['messages'][$offset]);
+        unset($this->messages[$offset]);
     }
     public function offsetGet($offset)
     {
-        return isset($_SESSION['messages'][$offset])
-        ? $_SESSION['messages'][$offset] : null;
+        return isset($this->messages[$offset])
+        ? $this->messages[$offset] : null;
     }
     public function offsetSet($offset, $value)
     {
         if (is_null($offset)) {
-            $_SESSION['messages'][] = $value;
+            $this->messages[] = $value;
             return;
         }
-        $_SESSION['messages'][$offset] = $value;
+        $this->messages[$offset] = $value;
     }
 
     /*************************************************************************
@@ -66,8 +72,8 @@ class Messages implements \ArrayAccess, \Iterator, \Countable
      ************************************************************************/
     public function reset()
     {
-        $_SESSION['messages'] = array();
-        return $_SESSION['messages'];
+        $this->messages = array();
+        return $this->messages;
     }
 
     public function add($message, $status)

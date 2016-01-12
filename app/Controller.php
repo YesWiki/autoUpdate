@@ -23,7 +23,7 @@ class Controller
 
     public function run($get)
     {
-        $view = new View($this->autoUpdate);
+        $view = new View($this->autoUpdate, $this->messages);
 
         if (!isset($get['autoupdate'])) {
             $get['autoupdate'] = "default";
