@@ -8,6 +8,6 @@ mise a jour.
 [ ] Trouver un moyen de gérer le nom du repertoire dans l'archive (actuellement
     cercopitheque-yeswiki)
 [ ] Supprimer les fichiers temporaire à la fin de la mise a jour
-[ ] Utiliser twig pour les templates
+[X] Utiliser twig pour les templates
 [ ] Trouver une façon propre de gérer les messages (Superglobale gérée différement)
 [ ] Sauvegarde des fichiers avant la mise à jour.

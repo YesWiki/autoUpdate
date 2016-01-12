@@ -11,5 +11,8 @@
         "psr-4": {
           "AutoUpdate\\": "app"
         }
+    },
+    "require": {
+        "twig/twig": "^1.23"
     }
 }

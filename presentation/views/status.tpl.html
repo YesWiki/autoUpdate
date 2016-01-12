@@ -1,14 +1,21 @@
-<?php
-    $link = "?wiki=" . $_GET['wiki'] . "&autoupdate=upgrade";
-    $color = "btn-warning";
-    $version  = $this->autoUpdate->getWikiVersion();
-?>
+<p>
+    {{ AU_VERSION_WIKI }} : {{ wikiVersion }}
+</p>
+<p>
+    {{ AU_VERSION_REPO }} : {{ repoVersion }}
+</p>
 
-Version du Wiki : <?php print($version); ?>
-
-<?php if ($this->autoUpdate->isAdmin() and $this->autoUpdate->isNewVersion()) { ?>
-    <a  href="<?php print($link); ?>"
-        class="btn btn-warning" title="<?php print(_t('AU_UPDATE')); ?>">
-        <?php print(_t('AU_UPDATE')); ?>
+{% if isAdmin and isNewVersion %}
+    <p> {{ AU_WARNING }} </p>
+    <a  href="{{ link }}"
+        class="btn btn-primary" title="{{ AU_UPDATE }}">
+        {{ AU_UPDATE }}
     </a>
-<?php }
+{% endif %}
+
+{% if isAdmin and not isNewVersion %}
+    <a  href="{{ link }}"
+        class="btn btn-warning" title="{{ AU_FORCE_UPDATE }}">
+        {{ AU_FORCE_UPDATE }}
+    </a>
+{% endif %}

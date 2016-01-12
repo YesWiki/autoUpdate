@@ -108,6 +108,12 @@ class AutoUpdate
         return _t('AU_UNKNOW');
     }
 
+    public function getRepoVersion()
+    {
+        $repo = new Repository($this->getRepositoryAddress());
+        return $repo->getVersion();
+    }
+
     public function isNewVersion()
     {
         $repo = new Repository($this->getRepositoryAddress());
