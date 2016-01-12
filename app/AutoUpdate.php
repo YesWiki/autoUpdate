@@ -3,7 +3,6 @@ namespace AutoUpdate;
 
 class AutoUpdate
 {
-
     private $wiki;
     private $files;
 
@@ -38,6 +37,12 @@ class AutoUpdate
         $zip->close();
 
         return $path;
+    }
+
+    public function checkFilesACL()
+    {
+        $path = $this->getWikiDir();
+        return $this->files->isWritable($path);
     }
 
     public function checkIntegrity($path)

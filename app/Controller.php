@@ -32,12 +32,8 @@ class Controller
         switch ($get['autoupdate']) {
             case 'upgrade':
                 if ($this->autoUpdate->isAdmin()) {
-
                     // Remise a zéro des messages
                     $this->messages->reset();
-
-                    // Vérification des droits sur le fichiers
-                    // TODO
 
                     // Télécahrgement de l'archive
                     $file = $this->autoUpdate->download();
@@ -64,6 +60,14 @@ class Controller
                         break;
                     }
                     $this->messages->add('AU_EXTRACT', 'AU_OK');
+
+                    // Vérification des droits sur le fichiers
+                    if (!$this->autoUpdate->checkFilesACL($path)) {
+                        $this->messages->add('AU_ACL', 'AU_ERROR');
+                        $view->show('update');
+                        break;
+                    }
+                    $this->messages->add('AU_ACL', 'AU_OK');
 
                     // Mise à jour du coeur du wiki
                     if (!$this->autoUpdate->upgradeCore($path)) {
