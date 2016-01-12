@@ -77,6 +77,14 @@ class Controller
                     }
                     $this->messages->add('AU_UPDATE_YESWIKI', 'AU_OK');
 
+                    // Mise à jour du coeur du wiki
+                    if (!$this->autoUpdate->upgradeConf()) {
+                        $this->messages->add('AU_UPDATE_CONF', 'AU_ERROR');
+                        $view->show('update');
+                        break;
+                    }
+                    $this->messages->add('AU_UPDATE_CONF', 'AU_OK');
+
                     // Mise à jour des tools.
                     if (!$this->autoUpdate->upgradeTools($path)) {
                         $this->messages->add('AU_UPDATE_TOOL', 'AU_ERROR');

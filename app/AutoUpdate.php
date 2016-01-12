@@ -73,6 +73,14 @@ class AutoUpdate
         return true;
     }
 
+    public function upgradeConf()
+    {
+        $conf = new Configuration($this->getWikiDir() . '/wakka.config.php');
+        $repo = new Repository($this->getRepositoryAddress());
+        $conf['yeswiki_release'] = $repo->getVersion();
+        return $conf->write();
+    }
+
     public function upgradeTools($path)
     {
         $src = $path . '/yeswiki/tools';

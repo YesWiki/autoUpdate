@@ -17,6 +17,7 @@ $GLOBALS['translations'] = array_merge(
         'AU_UPDATE' => "Mettre à jour",
         'AU_UPDATE_TOOL' => "Mise à jour du tool autoupdate",
         'AU_UPDATE_YESWIKI' => "Mise à jour du wiki",
+        'AU_UPDATE_CONF' => "Mise à jour de la configuration",
         'AU_OK' => "ok",
         'AU_ERROR' => "Erreur",
         'AU_UNKNOW' => "Inconnue",

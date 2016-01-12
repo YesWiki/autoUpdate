@@ -22,13 +22,13 @@ class Repository
      */
     public function compareVersion($localVersion, $repoVersion = 'stable')
     {
-        if ($localVersion === $this->data[$repoVersion]['version']) {
+        $repoVersion = $this->getVersion($repoVersion);
+
+        if ($localVersion === $repoVersion) {
             return 0;
         }
 
-        $repoVersion = $this->evalVersion(
-            $this->data[$repoVersion]['version']
-        );
+        $repoVersion = $this->evalVersion($repoVersion);
 
         $localVersion = $this->evalVersion(
             $localVersion
@@ -40,6 +40,11 @@ class Repository
             }
         }
         return -1;
+    }
+
+    public function getVersion($repoVersion = 'stable')
+    {
+        return $this->data[$repoVersion]['version'];
     }
 
     public function getMD5($version = 'stable')
