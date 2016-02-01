@@ -32,68 +32,7 @@ class Controller
         switch ($get['autoupdate']) {
             case 'upgrade':
                 if ($this->autoUpdate->isAdmin()) {
-                    // Remise a zéro des messages
-                    $this->messages->reset();
-
-                    // Télécahrgement de l'archive
-                    $file = $this->autoUpdate->download();
-                    if (false === $file) {
-                        $this->messages->add('AU_DOWNLOAD', 'AU_ERROR');
-                        $view->show('update');
-                        break;
-                    }
-                    $this->messages->add('AU_DOWNLOAD', 'AU_OK');
-
-                    // Vérification MD5
-                    if (!$this->autoUpdate->checkIntegrity($file)) {
-                        $this->messages->add('AU_INTEGRITY', 'AU_ERROR');
-                        $view->show('update');
-                        break;
-                    }
-                    $this->messages->add('AU_INTEGRITY', 'AU_OK');
-
-                    // Extraction de l'archive
-                    $path = $this->autoUpdate->extract($file);
-                    if (false === $path) {
-                        $this->messages->add('AU_EXTRACT', 'AU_ERROR');
-                        $view->show('update');
-                        break;
-                    }
-                    $this->messages->add('AU_EXTRACT', 'AU_OK');
-
-                    // Vérification des droits sur le fichiers
-                    if (!$this->autoUpdate->checkFilesACL($path)) {
-                        $this->messages->add('AU_ACL', 'AU_ERROR');
-                        $view->show('update');
-                        break;
-                    }
-                    $this->messages->add('AU_ACL', 'AU_OK');
-
-                    // Mise à jour du coeur du wiki
-                    if (!$this->autoUpdate->upgradeCore($path)) {
-                        $this->messages->add('AU_UPDATE_YESWIKI', 'AU_ERROR');
-                        $view->show('update');
-                        break;
-                    }
-                    $this->messages->add('AU_UPDATE_YESWIKI', 'AU_OK');
-
-                    // Mise à jour du coeur du wiki
-                    if (!$this->autoUpdate->upgradeConf()) {
-                        $this->messages->add('AU_UPDATE_CONF', 'AU_ERROR');
-                        $view->show('update');
-                        break;
-                    }
-                    $this->messages->add('AU_UPDATE_CONF', 'AU_OK');
-
-                    // Mise à jour des tools.
-                    if (!$this->autoUpdate->upgradeTools($path)) {
-                        $this->messages->add('AU_UPDATE_TOOL', 'AU_ERROR');
-                        $view->show('update');
-                        break;
-                    }
-                    $this->messages->add('AU_UPDATE_TOOL', 'AU_OK');
-
-                    $view->show('update');
+                    $this->upgrade($view);
                 }
                 break;
 
@@ -101,5 +40,71 @@ class Controller
                 $view->show('status');
                 break;
         }
+    }
+
+    private function upgrade($view)
+    {
+        // Remise a zéro des messages
+        $this->messages->reset();
+
+        // Télécahrgement de l'archive
+        $file = $this->autoUpdate->download();
+        if (false === $file) {
+            $this->messages->add('AU_DOWNLOAD', 'AU_ERROR');
+            $view->show('update');
+            break;
+        }
+        $this->messages->add('AU_DOWNLOAD', 'AU_OK');
+
+        // Vérification MD5
+        if (!$this->autoUpdate->checkIntegrity($file)) {
+            $this->messages->add('AU_INTEGRITY', 'AU_ERROR');
+            $view->show('update');
+            break;
+        }
+        $this->messages->add('AU_INTEGRITY', 'AU_OK');
+
+        // Extraction de l'archive
+        $path = $this->autoUpdate->extract($file);
+        if (false === $path) {
+            $this->messages->add('AU_EXTRACT', 'AU_ERROR');
+            $view->show('update');
+            break;
+        }
+        $this->messages->add('AU_EXTRACT', 'AU_OK');
+
+        // Vérification des droits sur le fichiers
+        if (!$this->autoUpdate->checkFilesACL($path)) {
+            $this->messages->add('AU_ACL', 'AU_ERROR');
+            $view->show('update');
+            break;
+        }
+        $this->messages->add('AU_ACL', 'AU_OK');
+
+        // Mise à jour du coeur du wiki
+        if (!$this->autoUpdate->upgradeCore($path)) {
+            $this->messages->add('AU_UPDATE_YESWIKI', 'AU_ERROR');
+            $view->show('update');
+            break;
+        }
+        $this->messages->add('AU_UPDATE_YESWIKI', 'AU_OK');
+
+        // Mise à jour du coeur du wiki
+        if (!$this->autoUpdate->upgradeConf()) {
+            $this->messages->add('AU_UPDATE_CONF', 'AU_ERROR');
+            $view->show('update');
+            break;
+        }
+        $this->messages->add('AU_UPDATE_CONF', 'AU_OK');
+
+        // Mise à jour des tools.
+        if (!$this->autoUpdate->upgradeTools($path)) {
+            $this->messages->add('AU_UPDATE_TOOL', 'AU_ERROR');
+            $view->show('update');
+            break;
+        }
+        $this->messages->add('AU_UPDATE_TOOL', 'AU_OK');
+
+        $view->show('update');
     }
 }
