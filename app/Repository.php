@@ -3,7 +3,7 @@ namespace AutoUpdate;
 
 class Repository
 {
-    const DEFAULT_REPO = 'http://yeswiki.net/repository/';
+    const DEFAULT_REPO = 'http://yeswiki.net/repository/stable/';
 
     private $address;
     private $data = null;
