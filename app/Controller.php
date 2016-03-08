@@ -23,26 +23,34 @@ class Controller
 
     public function run($get)
     {
-        $view = new View($this->autoUpdate, $this->messages);
-
         if (!isset($get['autoupdate'])) {
             $get['autoupdate'] = "default";
+        }
+
+        if (!$this->autoUpdate->repository->load()) {
+            $this->messages->add('AU_REPO_ERROR', 'AU_ERROR');
+            $view = new ViewStatus($this->autoUpdate, $this->messages);
+            $view->show();
+            return;
         }
 
         switch ($get['autoupdate']) {
             case 'upgrade':
                 if ($this->autoUpdate->isAdmin()) {
-                    $this->upgrade($view);
+                    $this->upgrade();
+                    $view = new ViewUpdate($this->autoUpdate, $this->messages);
+                    $view->show();
                 }
                 break;
 
             default:
-                $view->show('status');
+                $view = new ViewStatus($this->autoUpdate, $this->messages);
+                $view->show();
                 break;
         }
     }
 
-    private function upgrade($view)
+    private function upgrade()
     {
         // Remise a zéro des messages
         $this->messages->reset();
@@ -51,16 +59,14 @@ class Controller
         $file = $this->autoUpdate->download();
         if (false === $file) {
             $this->messages->add('AU_DOWNLOAD', 'AU_ERROR');
-            $view->show('update');
-            break;
+            return;
         }
         $this->messages->add('AU_DOWNLOAD', 'AU_OK');
 
         // Vérification MD5
         if (!$this->autoUpdate->checkIntegrity($file)) {
             $this->messages->add('AU_INTEGRITY', 'AU_ERROR');
-            $view->show('update');
-            break;
+            return;
         }
         $this->messages->add('AU_INTEGRITY', 'AU_OK');
 
@@ -68,43 +74,36 @@ class Controller
         $path = $this->autoUpdate->extract($file);
         if (false === $path) {
             $this->messages->add('AU_EXTRACT', 'AU_ERROR');
-            $view->show('update');
-            break;
+            return;
         }
         $this->messages->add('AU_EXTRACT', 'AU_OK');
 
         // Vérification des droits sur le fichiers
         if (!$this->autoUpdate->checkFilesACL($path)) {
             $this->messages->add('AU_ACL', 'AU_ERROR');
-            $view->show('update');
-            break;
+            return;
         }
         $this->messages->add('AU_ACL', 'AU_OK');
 
         // Mise à jour du coeur du wiki
         if (!$this->autoUpdate->upgradeCore($path)) {
             $this->messages->add('AU_UPDATE_YESWIKI', 'AU_ERROR');
-            $view->show('update');
-            break;
+            return;
         }
         $this->messages->add('AU_UPDATE_YESWIKI', 'AU_OK');
 
         // Mise à jour du coeur du wiki
         if (!$this->autoUpdate->upgradeConf()) {
             $this->messages->add('AU_UPDATE_CONF', 'AU_ERROR');
-            $view->show('update');
-            break;
+            return;
         }
         $this->messages->add('AU_UPDATE_CONF', 'AU_OK');
 
         // Mise à jour des tools.
         if (!$this->autoUpdate->upgradeTools($path)) {
             $this->messages->add('AU_UPDATE_TOOL', 'AU_ERROR');
-            $view->show('update');
-            break;
+            return;
         }
         $this->messages->add('AU_UPDATE_TOOL', 'AU_OK');
-
-        $view->show('update');
     }
 }
