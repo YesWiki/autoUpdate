@@ -15,10 +15,10 @@ class Controller
     private $autoUpdate;
     private $messages;
 
-    public function __construct($wikiInstance)
+    public function __construct($autoUpdate, $messages)
     {
-        $this->autoUpdate = new AutoUpdate($wikiInstance);
-        $this->messages = new Messages($wikiInstance);
+        $this->autoUpdate = $autoUpdate;
+        $this->messages = $messages;
     }
 
     public function run($get)

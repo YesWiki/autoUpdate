@@ -7,5 +7,8 @@ if (!defined("WIKINI_VERSION")) {
     die("acc&egrave;s direct interdit");
 }
 
-$controller = new Controller($this);
+$autoUpdate = new AutoUpdate($this);
+$messages = new Messages();
+$controller = new Controller($autoUpdate, $messages);
+
 $controller->run($_GET);
