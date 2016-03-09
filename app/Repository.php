@@ -8,10 +8,12 @@ class Repository
     private $address;
     private $data = null;
 
-    public function __construct($address = DEFAULT_REPO)
+    public function __construct($address = null)
     {
+        if (is_null($address)) {
+            $address = $this::DEFAULT_REPO;
+        }
         $this->address = $address;
-        $this->loadRepo();
     }
 
     /**
@@ -76,12 +78,16 @@ class Repository
         return false;
     }
 
-    private function loadRepo()
+    public function load()
     {
+        if (filter_var($this->address, FILTER_VALIDATE_URL) === false) {
+            return false;
+        }
+
         $this->data = array();
 
         $repoInfosFile = $this->address . 'infos.json';
-        if (($repoInfos = file_get_contents($repoInfosFile)) === false) {
+        if (($repoInfos = @file_get_contents($repoInfosFile)) === false) {
             return false;
         }
 
@@ -91,7 +97,7 @@ class Repository
             return false;
         }
 
-        return $this->data;
+        return true;
     }
 
     private function evalVersion($version)

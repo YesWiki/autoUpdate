@@ -4,12 +4,19 @@ namespace AutoUpdate;
 class AutoUpdate
 {
     private $wiki;
-    private $files;
+    private $files = null;
+    public $repository = null;
 
     public function __construct($wiki)
     {
         $this->wiki = $wiki;
         $this->files = new Files();
+    }
+
+    public function initRepository()
+    {
+        $this->repository = new Repository($this->getRepositoryAddress());
+        return $this->repository->load();
     }
 
     public function isAdmin()
@@ -19,8 +26,7 @@ class AutoUpdate
 
     public function download()
     {
-        $repo = new Repository($this->getRepositoryAddress());
-        return $repo->getFile();
+        return $this->repository->getFile();
     }
 
     public function extract($file)
@@ -47,8 +53,7 @@ class AutoUpdate
 
     public function checkIntegrity($path)
     {
-        $repo = new Repository($this->getRepositoryAddress());
-        $repoMD5 = $repo->getMD5();
+        $repoMD5 = $this->repository->getMD5();
         $md5File = md5_file($path);
         return ($md5File === $repoMD5);
     }
@@ -76,8 +81,7 @@ class AutoUpdate
     public function upgradeConf()
     {
         $conf = new Configuration($this->getWikiDir() . '/wakka.config.php');
-        $repo = new Repository($this->getRepositoryAddress());
-        $conf['yeswiki_release'] = $repo->getVersion();
+        $conf['yeswiki_release'] = $this->repository->getVersion();
         return $conf->write();
     }
 
@@ -108,17 +112,10 @@ class AutoUpdate
         return _t('AU_UNKNOW');
     }
 
-    public function getRepoVersion()
-    {
-        $repo = new Repository($this->getRepositoryAddress());
-        return $repo->getVersion();
-    }
 
     public function isNewVersion()
     {
-        $repo = new Repository($this->getRepositoryAddress());
-
-        if ($repo->compareVersion($this->getWikiVersion()) > 0) {
+        if ($this->repository->compareVersion($this->getWikiVersion()) > 0) {
             return true;
         }
         return false;

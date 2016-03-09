@@ -10,6 +10,7 @@ $GLOBALS['translations'] = array_merge(
     $GLOBALS['translations'],
     array(
         'AU_ACL' => "Vérification des droits sur les fichiers",
+        'AU_REPO_ERROR' => "Dépots inaccessibles.",
         'AU_VERSION_WIKI' => "Version du Wiki",
         'AU_VERSION_REPO' => "Version disponible sur le dépot",
         'AU_DOWNLOAD' => "Téléchargement de l'archive",

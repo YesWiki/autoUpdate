@@ -27,9 +27,8 @@ class Controller
             $get['autoupdate'] = "default";
         }
 
-        if (!$this->autoUpdate->repository->load()) {
-            $this->messages->add('AU_REPO_ERROR', 'AU_ERROR');
-            $view = new ViewStatus($this->autoUpdate, $this->messages);
+        if (!$this->autoUpdate->initRepository()) {
+            $view = new ViewNoRepo($this->autoUpdate);
             $view->show();
             return;
         }
