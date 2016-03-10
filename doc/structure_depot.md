@@ -59,6 +59,7 @@ Chaque entrée doit préciser le numéro de version et le fichier correspondant 
 
 Les paquets
 -----------
+
 Archive au format zip contenant un repertoire avec les fichiers mis à jour. Le nom du ficher suit la nomenclature : [tool-|theme-]nom-AAAA-MM-JJ-N.zip
 
  - AAAA : représente l'année sur quatres chiffres
@@ -67,27 +68,6 @@ Archive au format zip contenant un repertoire avec les fichiers mis à jour. Le 
 
  Le nom doit être en camelCase (lowerCamelCase).
 
-/
-├── actions
-├── COPYING
-├── formatters
-├── handlers
-├── includes
-├── index.php
-├── INSTALL
-├── interwiki.conf
-├── lang
-├── LICENSE
-├── README.md
-├── robots.txt
-├── setup
-├── tools
-├── tools.php
-├── wakka.basic.css
-├── wakka.config.php
-├── wakka.css
-└── wakka.php
-```
 
 Il y a trois types de paquet :
  - Le paquet pour un thème, préfixé par 'theme-' et dont les fichiers seront placé dans le dossier /themes après avoir effacer le fichiers/dossiers présent dans l'archive et dans le dossier themes.
@@ -105,4 +85,25 @@ Il y a trois types de paquet :
  ```
 
  exemple pour yeswiki-2016-01-01-1.zip :
+ ```
+ /
+ ├── actions
+ ├── COPYING
+ ├── formatters
+ ├── handlers
+ ├── includes
+ ├── index.php
+ ├── INSTALL
+ ├── interwiki.conf
+ ├── lang
+ ├── LICENSE
+ ├── README.md
+ ├── robots.txt
+ ├── setup
+ ├── tools
+ ├── tools.php
+ ├── wakka.basic.css
+ ├── wakka.config.php
+ ├── wakka.css
+ └── wakka.php
  ```
