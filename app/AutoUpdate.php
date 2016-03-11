@@ -3,6 +3,9 @@ namespace AutoUpdate;
 
 class AutoUpdate
 {
+    const DEFAULT_REPO = 'http://yeswiki.net/repository/stable/';
+    const DEFAULT_VERS = 'Cercopitheque';
+
     private $wiki;
     private $files = null;
     public $repository = null;
@@ -22,11 +25,6 @@ class AutoUpdate
     public function isAdmin()
     {
         return $this->wiki->UserIsAdmin();
-    }
-
-    public function download()
-    {
-        return $this->repository->getFile();
     }
 
     public function extract($file)
@@ -123,11 +121,27 @@ class AutoUpdate
 
     private function getRepositoryAddress()
     {
-        $repository = null;
+        $repositoryAddress = $this::DEFAULT_REPO;
+
         if (isset($this->wiki->config['yeswiki_repository'])) {
-            return $this->wiki->config['yeswiki_repository'];
+            $repositoryAddress = $this->wiki->config['yeswiki_repository'];
         }
-        return $repository;
+
+        if (substr($repositoryAddress, -1, 1) !== '/') {
+            $repositoryAddress .= '/';
+        }
+
+        $repositoryAddress .= $this->getYesWikiVersion();
+        return $repositoryAddress;
+    }
+
+    private function getYesWikiVersion()
+    {
+        $version = $this::DEFAULT_VERS;
+        if (isset($this->wiki->config['yeswiki_version'])) {
+            $version = $this->wiki->config['yeswiki_version'];
+        }
+        return strtolower($version);
     }
 
     private function getWikiDir()
