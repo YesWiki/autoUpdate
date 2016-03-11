@@ -102,7 +102,7 @@ class AutoUpdate
         return true;
     }
 
-    public function getWikiVersion()
+    public function getYesWikiRelease()
     {
         if (isset($this->wiki->config['yeswiki_release'])) {
             return $this->wiki->config['yeswiki_release'];
@@ -113,7 +113,7 @@ class AutoUpdate
 
     public function isNewVersion()
     {
-        if ($this->repository->compareVersion($this->getWikiVersion()) > 0) {
+        if ($this->repository->compareVersion($this->getYesWikiRelease()) > 0) {
             return true;
         }
         return false;

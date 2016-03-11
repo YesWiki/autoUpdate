@@ -12,7 +12,7 @@ class ViewNoRepo extends View
     protected function grabInformations()
     {
         $infos = array(
-            'wikiVersion' => $this->autoUpdate->getWikiVersion(),
+            'wikiVersion' => $this->autoUpdate->getYesWikiRelease(),
             'AU_REPO_ERROR' => _t('AU_REPO_ERROR'),
             'AU_VERSION_REPO' => _t('AU_VERSION_REPO'),
             'AU_VERSION_WIKI' => _t('AU_VERSION_WIKI'),
