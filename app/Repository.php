@@ -3,6 +3,7 @@ namespace AutoUpdate;
 
 class Repository
 {
+    const INDEX_FILE_NAME = 'index.json';
 
     private $address;
     private $data = null;
@@ -14,13 +15,15 @@ class Repository
 
     public function load()
     {
+        $this->address .= '/';
         if (filter_var($this->address, FILTER_VALIDATE_URL) === false) {
             return false;
         }
 
         $this->data = array();
 
-        $repoInfosFile = $this->address . 'infos.json';
+        $repoInfosFile = $this->address . $this::INDEX_FILE_NAME;
+
         if (($repoInfos = @file_get_contents($repoInfosFile)) === false) {
             return false;
         }
@@ -61,13 +64,13 @@ class Repository
 
     public function getVersion()
     {
-        return $this->data['version'];
+        return $this->data['yeswiki']['version'];
     }
 
     public function getMD5()
     {
         $disMd5File = file_get_contents(
-            $this->address . $this->data['file'] . '.md5'
+            $this->address . $this->data['yeswiki']['file'] . '.md5'
         );
         return explode('  ', $disMd5File)[0];
     }
