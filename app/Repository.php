@@ -54,7 +54,7 @@ class Repository
         $repoVersion = $this->evalVersion($repoVersion);
         $localVersion = $this->evalVersion($localVersion);
 
-        for ($i = 0; $i < 3; $i++) {
+        for ($i = 0; $i < 4; $i++) {
             if ($repoVersion[$i] > $localVersion[$i]) {
                 return $i + 1;
             }
@@ -64,7 +64,11 @@ class Repository
 
     public function getVersion()
     {
-        return $this->data['yeswiki']['version'];
+        $pattern = "/^[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{1}$/";
+        if (preg_match($pattern, $this->data['yeswiki']['version'])) {
+                return $this->data['yeswiki']['version'];
+        }
+        return "0000-00-00-0";
     }
 
     public function getMD5()
@@ -95,7 +99,7 @@ class Repository
 
     private function evalVersion($version)
     {
-        return explode('.', $version);
+        return explode('-', $version);
     }
 
     private function downloadFile($sourceUrl, $destination)

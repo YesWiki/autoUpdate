@@ -105,7 +105,11 @@ class AutoUpdate
     public function getYesWikiRelease()
     {
         if (isset($this->wiki->config['yeswiki_release'])) {
-            return $this->wiki->config['yeswiki_release'];
+            $version = $this->wiki->config['yeswiki_release'];
+            if ($this->checkVersionFormat($version)) {
+                return $version;
+            }
+            return "0000-00-00-0";
         }
         return _t('AU_UNKNOW');
     }
@@ -142,6 +146,12 @@ class AutoUpdate
             $version = $this->wiki->config['yeswiki_version'];
         }
         return strtolower($version);
+    }
+
+    private function checkVersionFormat($version)
+    {
+        $pattern = "/^[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{1}$/";
+        return(preg_match($pattern, $version));
     }
 
     private function getWikiDir()
