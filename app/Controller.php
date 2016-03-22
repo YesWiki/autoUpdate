@@ -55,7 +55,7 @@ class Controller
         $this->messages->reset();
 
         // Télécahrgement de l'archive
-        $file = $this->autoUpdate->download();
+        $file = $this->autoUpdate->repository->getFile();
         if (false === $file) {
             $this->messages->add('AU_DOWNLOAD', 'AU_ERROR');
             return;

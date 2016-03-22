@@ -3,7 +3,7 @@ namespace AutoUpdate;
 
 class Repository
 {
-    const INDEX_FILE_NAME = 'index.json';
+    const INDEX_FILE_NAME = 'packages.json';
 
     private $address;
     private $data = null;
@@ -79,7 +79,7 @@ class Repository
     {
 
         $destinationFile = tempnam(sys_get_temp_dir(), 'yeswiki_');
-        $sourceUrl = $this->address . $this->data['file'];
+        $sourceUrl = $this->address . $this->data['yeswiki']['file'];
 
         $this->downloadFile(
             $sourceUrl,

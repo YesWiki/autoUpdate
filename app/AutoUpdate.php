@@ -3,9 +3,9 @@ namespace AutoUpdate;
 
 class AutoUpdate
 {
-    const DEFAULT_REPO = 'http://yeswiki.net/repository/stable/';
-    const DEFAULT_VERS = 'Cercopitheque';
-
+    const DEFAULT_REPO = 'http://yeswiki.net/repository/';
+    const DEFAULT_VERS = 'Cercopitheque'; // Pour gérer les vielles version de
+                                          // YesWiki
     private $wiki;
     private $files = null;
     public $repository = null;
@@ -58,7 +58,7 @@ class AutoUpdate
 
     public function upgradeCore($path)
     {
-        $src = $path . '/yeswiki';
+        $src = $path . '/';
         $des = $this->getWikiDir();
 
         $file2ignore = array('.', '..', 'tools', 'files', 'cache', 'themes',
@@ -85,7 +85,7 @@ class AutoUpdate
 
     public function upgradeTools($path)
     {
-        $src = $path . '/yeswiki/tools';
+        $src = $path . '/tools';
         $des = $this->getWikiDir() . '/tools';
         $file2ignore = array('.', '..');
 
