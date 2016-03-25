@@ -11,6 +11,6 @@ if (isset($metadatas['lang'])) {
     $wakkaConfig['lang'] = 'fr';
 }
 
-include_once 'tools/yeswiki-tool-autoupdate/lang/autoupdate_'
+include_once 'tools/autoUpdate/lang/autoupdate_'
     . $wakkaConfig['lang']
     . '.inc.php';
