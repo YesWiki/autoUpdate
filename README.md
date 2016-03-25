@@ -3,7 +3,7 @@ autoUpdate
 
 Un tool pour automatiser la mise à jour de YesWiki.
 
-L'action {{autoupdate}} permet d'afficher la version de YesWiki. Si
+L'action {{update}} permet d'afficher la version de YesWiki. Si
 l'utilisateur connecté est un administrateur un bouton permet de lancer la mise
 à jour du Wiki si une version plus récente est disponible.
 
