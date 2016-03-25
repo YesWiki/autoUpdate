@@ -1,13 +1,12 @@
 <?php
 namespace AutoUpdate;
 
-class Configuration implements \ArrayAccess
+class Configuration extends Collection
 {
     /**
      *
      * @var array
      */
-    private $config;
     private $file;
 
     /**
@@ -19,32 +18,32 @@ class Configuration implements \ArrayAccess
         $this->file = $file;
         include $file;
         if (isset($wakkaConfig)) {
-            $this->config = $wakkaConfig;
+            $this->list = $wakkaConfig;
         }
     }
 
     public function offsetSet($offset, $value)
     {
         if (is_null($offset)) {
-            $this->config[] = $value;
+            $this->list[] = $value;
             return;
         }
-        $this->config[$offset] = $value;
+        $this->list[$offset] = $value;
     }
 
     public function offsetExists($offset)
     {
-        return isset($this->config[$offset]);
+        return isset($this->list[$offset]);
     }
 
     public function offsetUnset($offset)
     {
-        unset($this->config[$offset]);
+        unset($this->list[$offset]);
     }
 
     public function offsetGet($offset)
     {
-        return isset($this->config[$offset]) ? $this->config[$offset] : null;
+        return isset($this->list[$offset]) ? $this->list[$offset] : null;
     }
 
     /**
@@ -57,9 +56,8 @@ class Configuration implements \ArrayAccess
             $file = $this->file;
         }
 
-        $content = "<?php\n";
-        $content .= "\$$arrayName = array(\n";
-        foreach ($this->config as $key => $value) {
+        $content = "<?php\n" . "\$$arrayName = array(\n";
+        foreach ($this->list as $key => $value) {
             $content .= "    \"" . $key . "\" => \"" . $value . "\",\n";
         }
         $content .= ");\n";

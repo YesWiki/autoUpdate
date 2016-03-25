@@ -11,9 +11,11 @@ class ViewStatus extends View
 
     protected function grabInformations()
     {
+        $corePackage = $this->autoUpdate->repository->getPackage('yeswiki');
+
         $infos = array(
             'wikiVersion' => $this->autoUpdate->getYesWikiRelease(),
-            'repoVersion' => $this->autoUpdate->repository->getVersion(),
+            'repoVersion' => $corePackage->version(),
             'link' => "?wiki=" . $_GET['wiki'] . "&autoupdate=upgrade",
             'isAdmin' => $this->autoUpdate->isAdmin(),
             'isNewVersion' => $this->autoUpdate->isNewVersion(),

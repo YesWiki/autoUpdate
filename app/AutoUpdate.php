@@ -27,79 +27,11 @@ class AutoUpdate
         return $this->wiki->UserIsAdmin();
     }
 
-    public function extract($file)
-    {
-        $path = $this->files->tmpdir();
-
-        $zip = new \ZipArchive;
-        if (true !== $zip->open($file)) {
-            return false;
-        }
-        if (true !== $zip->extractTo($path)) {
-            return false;
-        }
-        $zip->close();
-
-        return $path;
-    }
-
     public function checkFilesACL()
     {
         $path = $this->getWikiDir();
-        return $this->files->isWritable($path);
-    }
-
-    public function checkIntegrity($path)
-    {
-        $repoMD5 = $this->repository->getMD5();
-        $md5File = md5_file($path);
-        return ($md5File === $repoMD5);
-    }
-
-    public function upgradeCore($path)
-    {
-        $src = $path . '/';
-        $des = $this->getWikiDir();
-
-        $file2ignore = array('.', '..', 'tools', 'files', 'cache', 'themes',
-            'wakka.config.php');
-
-        if ($res = opendir($src)) {
-            while (($file = readdir($res)) !== false) {
-                // Ignore les fichiers de la liste
-                if (!in_array($file, $file2ignore)) {
-                    $this->files->copy($src . '/' . $file, $des . '/' . $file);
-                }
-            }
-            closedir($res);
-        }
-        return true;
-    }
-
-    public function upgradeConf()
-    {
-        $conf = new Configuration($this->getWikiDir() . '/wakka.config.php');
-        $conf['yeswiki_release'] = $this->repository->getVersion();
-        return $conf->write();
-    }
-
-    public function upgradeTools($path)
-    {
-        $src = $path . '/tools';
-        $des = $this->getWikiDir() . '/tools';
-        $file2ignore = array('.', '..');
-
-        // TODO : Ajouter un message par outils mis à jour.
-        if ($res = opendir($src)) {
-            while (($file = readdir($res)) !== false) {
-                // Ignore les fichiers de la liste
-                if (!in_array($file, $file2ignore)) {
-                    $this->files->copy($src . '/' . $file, $des . '/' . $file);
-                }
-            }
-            closedir($res);
-        }
-        return true;
+        $files = new Files();
+        return $files->isWritable($path);
     }
 
     public function getYesWikiRelease()
@@ -114,13 +46,20 @@ class AutoUpdate
         return _t('AU_UNKNOW');
     }
 
-
     public function isNewVersion()
     {
-        if ($this->repository->compareVersion($this->getYesWikiRelease()) > 0) {
+        $corePackage = $this->repository->getPackage('yeswiki');
+        $corePackageVersion = $corePackage->version();
+
+        if ($corePackageVersion->compareVersion($this->getYesWikiRelease()) > 0) {
             return true;
         }
         return false;
+    }
+
+    public function getWikiConfiguration()
+    {
+        return new Configuration($this->getWikiDir() . '/wakka.config.php');
     }
 
     private function getRepositoryAddress()
@@ -148,14 +87,16 @@ class AutoUpdate
         return strtolower($version);
     }
 
+    public function getWikiDir()
+    {
+        return dirname(dirname(dirname(__DIR__)));
+    }
+
+
+
     private function checkVersionFormat($version)
     {
         $pattern = "/^[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{1}$/";
         return(preg_match($pattern, $version));
-    }
-
-    private function getWikiDir()
-    {
-        return dirname(dirname(dirname(__DIR__)));
     }
 }

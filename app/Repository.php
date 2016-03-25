@@ -3,10 +3,10 @@ namespace AutoUpdate;
 
 class Repository
 {
-    const INDEX_FILE_NAME = 'packages.json';
+    const INDEX_FILENAME = 'packages.json';
 
     private $address;
-    private $data = null;
+    public $packages = null;
 
     public function __construct($address)
     {
@@ -16,97 +16,48 @@ class Repository
     public function load()
     {
         $this->address .= '/';
+        $this->packages = new PackageCollection();
+
+        $data = array();
+
         if (filter_var($this->address, FILTER_VALIDATE_URL) === false) {
             return false;
         }
 
-        $this->data = array();
-
-        $repoInfosFile = $this->address . $this::INDEX_FILE_NAME;
+        $repoInfosFile = $this->address . $this::INDEX_FILENAME;
 
         if (($repoInfos = @file_get_contents($repoInfosFile)) === false) {
             return false;
         }
 
-        $this->data = json_decode($repoInfos, true);
+        $data = json_decode($repoInfos, true);
 
-        if (is_null($this->data)) {
+        if (is_null($data)) {
             return false;
+        }
+
+        $this->packages = new PackageCollection();
+
+        foreach ($data as $infos) {
+            // TODO : condition A supprimer une fois les dépots a jour
+            $version = new Version($infos['version']);
+            $this->packages->add($version, $this->address, $infos['file']);
         }
 
         return true;
     }
 
-    /**
-     * [compareVersion description]
-     * @param  [type] $local_version [description]
-     * @param  string $repo_version  [description]
-     * @return [type]                [description]
-     */
-    public function compareVersion($localVersion)
+    public function getPackage($name)
     {
-        $repoVersion = $this->getVersion();
-
-        if ($localVersion === $repoVersion) {
-            return 0;
+        if ($this->packages === null) {
+            throw new \Exception("Liste des paquets non initialisée", 1);
         }
 
-        $repoVersion = $this->evalVersion($repoVersion);
-        $localVersion = $this->evalVersion($localVersion);
-
-        for ($i = 0; $i < 4; $i++) {
-            if ($repoVersion[$i] > $localVersion[$i]) {
-                return $i + 1;
-            }
-        }
-        return -1;
-    }
-
-    public function getVersion()
-    {
-        $pattern = "/^[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{1}$/";
-        if (preg_match($pattern, $this->data['yeswiki']['version'])) {
-                return $this->data['yeswiki']['version'];
-        }
-        return "0000-00-00-0";
-    }
-
-    public function getMD5()
-    {
-        $disMd5File = file_get_contents(
-            $this->address . $this->data['yeswiki']['file'] . '.md5'
-        );
-        return explode('  ', $disMd5File)[0];
-    }
-
-    public function getFile()
-    {
-
-        $destinationFile = tempnam(sys_get_temp_dir(), 'yeswiki_');
-        $sourceUrl = $this->address . $this->data['yeswiki']['file'];
-
-        $this->downloadFile(
-            $sourceUrl,
-            $destinationFile
-        );
-
-        if (is_file($destinationFile)) {
-            return $destinationFile;
+        if (isset($this->packages[$name])) {
+            return $this->packages[$name];
         }
 
         return false;
-    }
 
-    private function evalVersion($version)
-    {
-        return explode('-', $version);
-    }
-
-    private function downloadFile($sourceUrl, $destination)
-    {
-        file_put_contents(
-            $destination,
-            fopen($sourceUrl, 'r')
-        );
     }
 }
