@@ -3,16 +3,8 @@ namespace AutoUpdate;
 
 class Configuration extends Collection
 {
-    /**
-     *
-     * @var array
-     */
     private $file;
 
-    /**
-     * [__construct description]
-     * @param [type] $file [description]
-     */
     public function __construct($file)
     {
         $this->file = $file;
@@ -45,11 +37,7 @@ class Configuration extends Collection
     {
         return isset($this->list[$offset]) ? $this->list[$offset] : null;
     }
-
-    /**
-     * écris le fichier de configuration
-     * @return [type] [description]
-     */
+ 
     public function write($file = null, $arrayName = "wakkaConfig")
     {
         if (is_null($file)) {
