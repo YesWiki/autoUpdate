@@ -62,6 +62,11 @@ class AutoUpdate
         return new Configuration($this->getWikiDir() . '/wakka.config.php');
     }
 
+    public function getWikiDir()
+    {
+        return dirname(dirname(dirname(__DIR__)));
+    }
+
     private function getRepositoryAddress()
     {
         $repositoryAddress = $this::DEFAULT_REPO;
@@ -86,13 +91,6 @@ class AutoUpdate
         }
         return strtolower($version);
     }
-
-    public function getWikiDir()
-    {
-        return dirname(dirname(dirname(__DIR__)));
-    }
-
-
 
     private function checkVersionFormat($version)
     {
