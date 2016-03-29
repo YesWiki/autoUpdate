@@ -1,0 +1,6 @@
+<h2>Thèmes </h2>
+<ul>
+{% for theme in themes %}
+    <li>{{ theme.name() }} : {{ theme.version() }}</li>
+{% endfor %}
+</ul>
