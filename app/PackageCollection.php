@@ -3,9 +3,9 @@ namespace AutoUpdate;
 
 class PackageCollection extends Collection
 {
-    const THEME_CLASS = '\AutoUpdate\PackageTheme';
-    const TOOL_CLASS = '\AutoUpdate\PackageTool';
-    const CORE_CLASS = '\AutoUpdate\PackageCore';
+    const THEME_CLASS = 'AutoUpdate\PackageTheme';
+    const TOOL_CLASS = 'AutoUpdate\PackageTool';
+    const CORE_CLASS = 'AutoUpdate\PackageCore';
 
     public function add($version, $address, $file)
     {
@@ -37,7 +37,8 @@ class PackageCollection extends Collection
 
     private function getPackageType($filename)
     {
-        switch (explode('-', $filename)[0]) {
+        $type = explode('-', $filename)[0];
+        switch ($type) {
             case 'yeswiki':
                 return $this::CORE_CLASS;
                 break;

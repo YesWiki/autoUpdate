@@ -5,11 +5,8 @@ class PackageTool extends Package
 {
     public function upgrade($desPath)
     {
-        #dummy
-    }
-
-    protected function name()
-    {
-        return 'Tool';
+        // TODO
+        $desPath = $desPath;
+        return false;
     }
 }

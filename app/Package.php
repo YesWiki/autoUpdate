@@ -12,12 +12,12 @@ abstract class Package
     // Chemin vers le paquet temporaire téléchargé localement
     protected $tmpFile = null;
     // nom du tool
-    public $name = "";
+    public $name = null;
     // Version du paquet
     protected $version;
 
     abstract public function upgrade($desPath);
-    abstract protected function name();
+    abstract protected function infos();
 
     public function __construct($version, $address)
     {
@@ -45,6 +45,15 @@ abstract class Package
         }
         $this->tmpFile = null;
         return false;
+    }
+
+    public function name()
+    {
+        if ($this->name === null) {
+                $this->name = explode('-', basename($this->address, '.zip'))[1];
+        }
+
+        return $this->name;
     }
 
     public function version()

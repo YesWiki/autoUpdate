@@ -7,6 +7,11 @@ class PackageCore extends Package
     const FILE_2_IGNORE = array('.', '..', 'tools', 'files', 'cache', 'themes',
         'wakka.config.php');
 
+    public function infos()
+    {
+        return array();
+    }
+
     public function upgrade($desPath)
     {
         if ($this->tmpPath === null) {
@@ -55,7 +60,7 @@ class PackageCore extends Package
         return $configuration->write();
     }
 
-    protected function name()
+    public function name()
     {
         return $this::CORE_NAME;
     }
