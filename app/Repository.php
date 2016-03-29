@@ -38,10 +38,13 @@ class Repository
 
         $this->packages = new PackageCollection();
 
-        foreach ($data as $infos) {
-            // TODO : condition A supprimer une fois les dépots a jour
-            $version = new Version($infos['version']);
-            $this->packages->add($version, $this->address, $infos['file']);
+        foreach ($data as $packageInfos) {
+            $version = new Version($packageInfos['version']);
+            $this->packages->add(
+                $version,
+                $this->address,
+                $packageInfos['file']
+            );
         }
 
         return true;
