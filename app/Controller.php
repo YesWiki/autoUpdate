@@ -21,7 +21,7 @@ class Controller
         $this->messages = $messages;
     }
 
-    public function run($get)
+    public function run($get, $filter = "all")
     {
         if (!isset($get['autoupdate'])) {
             $get['autoupdate'] = "default";
@@ -43,8 +43,25 @@ class Controller
                 break;
 
             default:
-                $view = new ViewStatus($this->autoUpdate, $this->messages);
-                $view->show();
+                switch ($filter) {
+                    case 'core':
+                        # code...
+                        break;
+
+                    case 'tools':
+                        # code...
+                        break;
+
+                    case 'themes':
+                        # code...
+                        break;
+
+                    default:
+                        $view = new ViewStatus($this->autoUpdate, $this->messages);
+                        $view->show();# code...
+                        break;
+                }
+
                 break;
         }
     }
