@@ -39,9 +39,9 @@ class Repository
         $this->packages = new PackageCollection();
 
         foreach ($data as $packageInfos) {
-            $version = new Version($packageInfos['version']);
+            $release = new Release($packageInfos['version']);
             $this->packages->add(
-                $version,
+                $release,
                 $this->address,
                 $packageInfos['file']
             );
@@ -50,17 +50,16 @@ class Repository
         return true;
     }
 
-    public function getPackage($name)
+    public function corePackage()
     {
         if ($this->packages === null) {
             throw new \Exception("Liste des paquets non initialisée", 1);
         }
 
-        if (isset($this->packages[$name])) {
-            return $this->packages[$name];
+        if (isset($this->packages['yeswiki'])) {
+            return $this->packages['yeswiki'];
         }
 
         return false;
-
     }
 }

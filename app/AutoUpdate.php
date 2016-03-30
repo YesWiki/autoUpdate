@@ -18,7 +18,7 @@ class AutoUpdate
 
     public function initRepository()
     {
-        $this->repository = new Repository($this->getRepositoryAddress());
+        $this->repository = new Repository($this->repositoryAddress());
         return $this->repository->load();
     }
 
@@ -37,29 +37,18 @@ class AutoUpdate
     public function getYesWikiRelease()
     {
         if (isset($this->wiki->config['yeswiki_release'])) {
-            $version = $this->wiki->config['yeswiki_release'];
-            if ($this->checkVersionFormat($version)) {
-                return $version;
-            }
-            return "0000-00-00-0";
+            return new Release($this->wiki->config['yeswiki_release']);
         }
-        return _t('AU_UNKNOW');
-    }
-
-    public function isNewVersion()
-    {
-        $corePackage = $this->repository->getPackage('yeswiki');
-        $corePackageVersion = $corePackage->version();
-
-        if ($corePackageVersion->compareVersion($this->getYesWikiRelease()) > 0) {
-            return true;
-        }
-        return false;
+        return new Release(Release::DEF_VERSION);
     }
 
     public function getWikiConfiguration()
     {
-        return new Configuration($this->getWikiDir() . '/wakka.config.php');
+        $configuration = new Configuration(
+            $this->getWikiDir() . '/wakka.config.php'
+        );
+        $configuration->load();
+        return $configuration;
     }
 
     public function getWikiDir()
@@ -67,7 +56,7 @@ class AutoUpdate
         return dirname(dirname(dirname(__DIR__)));
     }
 
-    private function getRepositoryAddress()
+    private function repositoryAddress()
     {
         $repositoryAddress = $this::DEFAULT_REPO;
 
@@ -90,11 +79,5 @@ class AutoUpdate
             $version = $this->wiki->config['yeswiki_version'];
         }
         return strtolower($version);
-    }
-
-    private function checkVersionFormat($version)
-    {
-        $pattern = "/^[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{1}$/";
-        return(preg_match($pattern, $version));
     }
 }

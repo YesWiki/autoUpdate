@@ -11,7 +11,14 @@ class PackageCollection extends Collection
     {
         $className = $this->getPackageType($file);
         $package = new $className($version, $address . $file);
-        $this->list[$package->name] = $package;
+        $this->list[$package->name()] = $package;
+    }
+
+    public function getCorePackage()
+    {
+        if (isset($this->list['yeswiki'])) {
+            return $this->list['yeswiki'];
+        }
     }
 
     public function getThemesPackages()

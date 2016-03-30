@@ -14,16 +14,16 @@ abstract class Package
     // nom du tool
     public $name = null;
     // Version du paquet
-    protected $version;
+    protected $release;
 
     abstract public function upgrade($desPath);
-    abstract protected function infos();
+    abstract public function updateAvailable();
+    abstract public function localRelease();
 
-    public function __construct($version, $address)
+    public function __construct($release, $address)
     {
-        $this->version = new Version($version);
+        $this->release = $release;
         $this->address = $address;
-        $this->name = $this->name();
     }
 
     public function checkIntegrity()
@@ -52,13 +52,12 @@ abstract class Package
         if ($this->name === null) {
                 $this->name = explode('-', basename($this->address, '.zip'))[1];
         }
-
         return $this->name;
     }
 
-    public function version()
+    public function release()
     {
-        return $this->version;
+        return $this->release;
     }
 
     public function extract()

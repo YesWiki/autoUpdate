@@ -7,9 +7,14 @@ class PackageCore extends Package
     const FILE_2_IGNORE = array('.', '..', 'tools', 'files', 'cache', 'themes',
         'wakka.config.php');
 
-    public function infos()
+    public function updateAvailable()
     {
-        return array();
+        return true;
+    }
+
+    public function localRelease()
+    {
+        return new Release("1970-01-01-1");
     }
 
     public function upgrade($desPath)
