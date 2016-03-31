@@ -22,11 +22,11 @@ class ViewStatus extends View
             'AU_VERSION_WIKI' => _t('AU_VERSION_WIKI'),
             'AU_INSTALL' => _t('AU_INSTALL'),
             'AU_ABSENT' => _t('AU_ABSENT'),
-            'core' => $this->autoUpdate->repository->corePackage(),
+            'core' => $this->autoUpdate->repository->getCorePackage(),
             'themes' =>
-                $this->autoUpdate->repository->packages->getThemesPackages(),
+                $this->autoUpdate->repository->getThemesPackages(),
             'tools' =>
-                $this->autoUpdate->repository->packages->getToolsPackages(),
+                $this->autoUpdate->repository->getToolsPackages(),
             'showCore' => true,
             'showThemes' => true,
             'showTools' => true,

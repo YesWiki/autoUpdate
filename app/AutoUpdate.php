@@ -7,7 +7,6 @@ class AutoUpdate
     const DEFAULT_VERS = 'Cercopitheque'; // Pour gérer les vielles version de
                                           // YesWiki
     private $wiki;
-    private $files = null;
     public $repository = null;
 
     public function __construct($wiki)
