@@ -65,6 +65,12 @@ class Files
         return false;
     }
 
+    protected function download($sourceUrl)
+    {
+        $this->tmpFile = tempnam(sys_get_temp_dir(), $this::PREFIX_FILENAME);
+        file_put_contents($this->tmpFile, fopen($sourceUrl, 'r'));
+    }
+
     private function isWritableFolder($path)
     {
         $file2ignore = array('.', '..');

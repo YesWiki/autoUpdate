@@ -48,6 +48,11 @@ abstract class Package extends Files
         return false;
     }
 
+    public function updateLink()
+    {
+        return '&upgrade=' . $this->name();
+    }
+
     public function name()
     {
         if ($this->name === null) {

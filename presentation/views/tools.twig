@@ -23,7 +23,7 @@
             </td>
             <td>
                 {% if isAdmin and tool.updateAvailable() and tool.installed() %}
-                    <a  href="{{ tool.updateLink() }}"
+                    <a  href="{{ baseUrl }}{{ tool.updateLink() }}"
                         class="btn btn-primary btn-sm"
                         title="{{ AU_UPDATE }}"
                     >
@@ -32,7 +32,7 @@
                 {% endif %}
 
                 {% if isAdmin and not tool.updateAvailable() and tool.installed() %}
-                    <a  href="{{ tool.updateLink() }}"
+                    <a  href="{{ baseUrl }}{{ tool.updateLink() }}"
                         class="btn btn-warning btn-sm"
                         title="{{ AU_FORCE_UPDATE }}"
                     >
@@ -41,7 +41,7 @@
                 {% endif %}
 
                 {% if isAdmin and not tool.installed() %}
-                    <a  href="{{ tool.updateLink() }}"
+                    <a  href="{{ baseUrl }}{{ tool.updateLink() }}"
                         class="btn btn-primary btn-sm"
                         title="{{ AU__INSTALL }}"
                     >

@@ -12,8 +12,7 @@ class ViewStatus extends View
     protected function grabInformations()
     {
         $infos = array(
-            // TODO plus d'appel a $_GET ici, demandé a autoUpdate l'URL de maj
-            'link' => "?wiki=" . $_GET['wiki'] . "&autoupdate=upgrade",
+            'baseUrl' => $this->autoUpdate->baseUrl(),
             'isAdmin' => $this->autoUpdate->isAdmin(),
             'AU_UPDATE' => _t('AU_UPDATE'),
             'AU_FORCE_UPDATE' => _t('AU_FORCE_UPDATE'),
