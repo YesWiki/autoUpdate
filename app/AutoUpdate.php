@@ -34,14 +34,6 @@ class AutoUpdate
         return $files->isWritable($path);
     }
 
-    public function getYesWikiRelease()
-    {
-        if (isset($this->wiki->config['yeswiki_release'])) {
-            return new Release($this->wiki->config['yeswiki_release']);
-        }
-        return new Release(Release::DEF_VERSION);
-    }
-
     public function getWikiConfiguration()
     {
         $configuration = new Configuration(

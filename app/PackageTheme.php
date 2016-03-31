@@ -1,8 +1,10 @@
 <?php
 namespace AutoUpdate;
 
-class PackageTheme extends Package
+class PackageTheme extends PackageExt
 {
+    const THEME_PATH = 'themes/';
+
     public function upgrade($desPath)
     {
         // TODO
@@ -10,13 +12,8 @@ class PackageTheme extends Package
         return false;
     }
 
-    public function updateAvailable()
+    protected function localPath()
     {
-        return false;
-    }
-
-    public function localRelease()
-    {
-        return new Release("1970-01-01-1");
+        return $this::THEME_PATH . $this->name() . '/';
     }
 }

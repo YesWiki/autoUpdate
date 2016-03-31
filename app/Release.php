@@ -3,12 +3,12 @@ namespace AutoUpdate;
 
 class Release
 {
-    const DEF_RELEASE = "0000-00-00-0";
+    const UNKNOW_RELEASE = "0000-00-00-0";
     private $release;
 
     public function __construct($release)
     {
-        $this->release = $this::DEF_RELEASE;
+        $this->release = $this::UNKNOW_RELEASE;
         if ($this->checkFormat($release)) {
             $this->release = $release;
         }
@@ -16,7 +16,7 @@ class Release
 
     public function __toString()
     {
-        if ($this->release === $this::DEF_RELEASE) {
+        if ($this->release === $this::UNKNOW_RELEASE) {
             return _t('AU_UNKNOW');
         }
         return (string)$this->release;

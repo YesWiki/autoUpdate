@@ -21,11 +21,13 @@ $GLOBALS['translations'] = array_merge(
         'AU_FORCE_UPDATE' => "Forcer la mise à jour",
         'AU_UPDATE_TOOL' => "Mise à jour des tools",
         'AU_UPDATE_YESWIKI' => "Mise à jour du wiki",
+        'AU_INSTALL' => "Installer",
         'AU_UPDATE_CONF' => "Mise à jour de la configuration",
         'AU_WARNING' => "Une mise à jour est disponible. Sauvegardez "
             . "votre wiki avant de le mettre à jour.",
         'AU_OK' => "ok",
         'AU_ERROR' => "Erreur",
         'AU_UNKNOW' => "Inconnue",
+        'AU_ABSENT' => "Non installé",
     )
 );

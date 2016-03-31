@@ -8,14 +8,14 @@
 
 {% if isAdmin and core.updateAvailable() %}
     <p> {{ AU_WARNING }} </p>
-    <a  href="{{ link }}"
+    <a  href="{{ core.updateLink() }}"
         class="btn btn-primary" title="{{ AU_UPDATE }}">
         {{ AU_UPDATE }}
     </a>
 {% endif %}
 
-{% if isAdmin and not core.updateAvailable %}
-    <a  href="{{ link }}"
+{% if isAdmin and not core.updateAvailable() %}
+    <a  href="{{ core.updateLink() }}"
         class="btn btn-warning" title="{{ AU_FORCE_UPDATE }}">
         {{ AU_FORCE_UPDATE }}
     </a>

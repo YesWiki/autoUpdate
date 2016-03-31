@@ -7,14 +7,31 @@ class PackageCore extends Package
     const FILE_2_IGNORE = array('.', '..', 'tools', 'files', 'cache', 'themes',
         'wakka.config.php');
 
+    private $localRelease = null;
+
     public function updateAvailable()
     {
-        return true;
+        if ($this->release->compare($this->localRelease()) > 0) {
+            return true;
+        }
+        return false;
     }
 
     public function localRelease()
     {
-        return new Release("1970-01-01-1");
+        if ($this->localRelease !== null) {
+            return $this->localRelease;
+        }
+
+        $configuration = new Configuration('wakka.config.php');
+        $configuration->load();
+
+        $release = Release::UNKNOW_RELEASE;
+        if (isset($configuration['yeswiki_release'])) {
+            $release = $configuration['yeswiki_release'];
+        }
+        $this->localRelease = new Release($release);
+        return $this->localRelease;
     }
 
     public function upgrade($desPath)
@@ -37,6 +54,11 @@ class PackageCore extends Package
             }
             closedir($res);
         }
+        return true;
+    }
+
+    public function installed()
+    {
         return true;
     }
 

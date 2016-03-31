@@ -1,8 +1,10 @@
 <?php
 namespace AutoUpdate;
 
-class PackageTool extends Package
+class PackageTool extends PackageExt
 {
+    const TOOL_PATH = 'tools/';
+
     public function upgrade($desPath)
     {
         // TODO
@@ -10,13 +12,8 @@ class PackageTool extends Package
         return false;
     }
 
-    public function updateAvailable()
+    protected function localPath()
     {
-        return false;
-    }
-
-    public function localRelease()
-    {
-        return new Release("1970-01-01-1");
+        return $this::TOOL_PATH . $this->name() . '/';
     }
 }

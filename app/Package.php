@@ -19,6 +19,7 @@ abstract class Package
     abstract public function upgrade($desPath);
     abstract public function updateAvailable();
     abstract public function localRelease();
+    abstract public function installed();
 
     public function __construct($release, $address)
     {

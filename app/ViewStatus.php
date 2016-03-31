@@ -20,6 +20,8 @@ class ViewStatus extends View
             'AU_WARNING' => _t('AU_WARNING'),
             'AU_VERSION_REPO' => _t('AU_VERSION_REPO'),
             'AU_VERSION_WIKI' => _t('AU_VERSION_WIKI'),
+            'AU_INSTALL' => _t('AU_INSTALL'),
+            'AU_ABSENT' => _t('AU_ABSENT'),
             'core' => $this->autoUpdate->repository->corePackage(),
             'themes' =>
                 $this->autoUpdate->repository->packages->getThemesPackages(),
