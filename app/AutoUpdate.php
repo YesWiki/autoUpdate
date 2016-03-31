@@ -13,7 +13,6 @@ class AutoUpdate
     public function __construct($wiki)
     {
         $this->wiki = $wiki;
-        $this->files = new Files();
     }
 
     public function initRepository()
@@ -25,13 +24,6 @@ class AutoUpdate
     public function isAdmin()
     {
         return $this->wiki->UserIsAdmin();
-    }
-
-    public function checkFilesACL()
-    {
-        $path = $this->getWikiDir();
-        $files = new Files();
-        return $files->isWritable($path);
     }
 
     public function getWikiConfiguration()

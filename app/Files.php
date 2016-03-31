@@ -3,7 +3,7 @@ namespace AutoUpdate;
 
 class Files
 {
-    public function tmpdir()
+    protected function tmpdir()
     {
         $path = tempnam(sys_get_temp_dir(), 'yeswiki_');
 
@@ -15,7 +15,7 @@ class Files
         return $path;
     }
 
-    public function delete($path)
+    protected function delete($path)
     {
         if (is_file($path)) {
             if (unlink($path)) {
@@ -28,7 +28,7 @@ class Files
         }
     }
 
-    public function copy($src, $des)
+    protected function copy($src, $des)
     {
         if (is_file($des) or is_dir($des) or is_link($des)) {
             $this->delete($des);
@@ -45,7 +45,7 @@ class Files
         return false;
     }
 
-    public function isWritable($path)
+    protected function isWritable($path)
     {
         // la destination n'existe pas et droits d'écriture sur le repertoire
         // de destination

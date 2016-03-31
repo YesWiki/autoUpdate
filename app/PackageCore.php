@@ -41,12 +41,11 @@ class PackageCore extends Package
         }
 
         $this->tmpPath .= '/';
-        $files = new Files();
         if ($res = opendir($this->tmpPath)) {
             while (($file = readdir($res)) !== false) {
                 // Ignore les fichiers de la liste
                 if (!in_array($file, $this::FILE_2_IGNORE)) {
-                    $files->copy(
+                    $this->copy(
                         $this->tmpPath . '/' . $file,
                         $desPath . '/' . $file
                     );
@@ -67,13 +66,12 @@ class PackageCore extends Package
         $src = $this->tmpPath . '/tools';
         $desPath .= '/tools';
         $file2ignore = array('.', '..');
-        $files = new Files();
         // TODO : Ajouter un message par outils mis à jour.
         if ($res = opendir($src)) {
             while (($file = readdir($res)) !== false) {
                 // Ignore les fichiers de la liste
                 if (!in_array($file, $file2ignore)) {
-                    $files->copy($src . '/' . $file, $desPath . '/' . $file);
+                    $this->copy($src . '/' . $file, $desPath . '/' . $file);
                 }
             }
             closedir($res);

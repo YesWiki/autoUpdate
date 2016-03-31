@@ -1,7 +1,7 @@
 <?php
 namespace AutoUpdate;
 
-abstract class Package
+abstract class Package extends Files
 {
     const PREFIX_FILENAME = 'yeswiki_';
 
@@ -72,15 +72,13 @@ abstract class Package
             return false;
         }
 
-        $files = new Files();
-        $this->tmpPath = $files->tmpdir();
+        $this->tmpPath = $this->tmpdir();
         if (true !== $zip->extractTo($this->tmpPath)) {
             return false;
         }
-
         $zip->close();
 
-        return $files->tmpdir();
+        return $this->tmpPath;
     }
 
     private function getMD5()
