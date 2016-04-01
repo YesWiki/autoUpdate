@@ -39,6 +39,11 @@ class AutoUpdate
         return $this->wiki->config['base_url'] . $this->wiki->tag;
     }
 
+    private function getWikiDir()
+    {
+        return dirname(dirname(dirname(__DIR__)));
+    }
+
     private function repositoryAddress()
     {
         $repositoryAddress = $this::DEFAULT_REPO;
