@@ -21,6 +21,7 @@ abstract class Package extends Files
     public $updateLink;
 
     abstract public function upgrade();
+    abstract public function upgradeInfos();
 
     abstract protected function localRelease();
     //abstract protected function updateAvailable();

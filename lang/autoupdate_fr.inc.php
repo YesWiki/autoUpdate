@@ -22,7 +22,7 @@ $GLOBALS['translations'] = array_merge(
         'AU_UPDATE_TOOL' => "Mise à jour des tools",
         'AU_UPDATE_PACKAGE' => "Mise à jour de ",
         'AU_INSTALL' => "Installer",
-        'AU_UPDATE_CONF' => "Mise à jour de la configuration",
+        'AU_UPDATE_INFOS' => "Mise à jour des informations de version",
         'AU_WARNING' => "Une mise à jour est disponible. Sauvegardez "
             . "votre wiki avant de le mettre à jour.",
         'AU_OK' => "ok",

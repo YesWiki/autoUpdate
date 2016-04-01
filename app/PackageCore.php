@@ -56,7 +56,7 @@ class PackageCore extends Package
         return true;
     }
 
-    public function upgradeConf()
+    public function upgradeInfos()
     {
         $configuration = new Configuration('wakka.config.php');
         $configuration->load();

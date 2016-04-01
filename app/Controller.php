@@ -94,13 +94,6 @@ class Controller
         $this->messages->add(_t('AU_UPDATE_PACKAGE') . $packageName, 'AU_OK');
 
         if (get_class($package) === PackageCollection::CORE_CLASS) {
-            // Mise à jour de la configuration de YesWiki
-            if (!$package->upgradeConf()) {
-                $this->messages->add('AU_UPDATE_CONF', 'AU_ERROR');
-                return;
-            }
-            $this->messages->add('AU_UPDATE_CONF', 'AU_OK');
-
             // Mise à jour des tools.
             if (!$package->upgradeTools()) {
                 $this->messages->add('AU_UPDATE_TOOL', 'AU_ERROR');
@@ -108,5 +101,12 @@ class Controller
             }
             $this->messages->add('AU_UPDATE_TOOL', 'AU_OK');
         }
+
+        // Mise à jour de la configuration de YesWiki
+        if (!$package->upgradeInfos()) {
+            $this->messages->add('AU_UPDATE_INFOS', 'AU_ERROR');
+            return;
+        }
+        $this->messages->add('AU_UPDATE_INFOS', 'AU_OK');
     }
 }

@@ -36,6 +36,18 @@ abstract class PackageExt extends Package
         return true;
     }
 
+    public function upgradeInfos()
+    {
+        $infos = array(
+            "name" => $this->name,
+            "release" => (string)$this->release,
+        );
+        $json = json_encode($infos);
+        file_put_contents($this->infosFilePath(), $json);
+        // TODO Vérifier que l'action a bien été éxécutée.
+        return true;
+    }
+
     public function deletePackage()
     {
         $desPath = $this->localPath();
@@ -50,10 +62,9 @@ abstract class PackageExt extends Package
             return $this->infos;
         }
 
-        $file = $this->localPath() . $this::INFOS_FILENAME;
         $this->infos = array();
-        if (is_file($file)) {
-            $json = file_get_contents($file);
+        if (is_file($this->infosFilePath())) {
+            $json = file_get_contents($this->infosFilePath());
             $this->infos = json_decode($json, true);
         }
         return $this->infos;
@@ -76,5 +87,10 @@ abstract class PackageExt extends Package
             return true;
         }
         return false;
+    }
+
+    private function infosFilePath()
+    {
+        return $this->localPath() . $this::INFOS_FILENAME;
     }
 }
