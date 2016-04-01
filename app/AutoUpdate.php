@@ -34,11 +34,6 @@ class AutoUpdate
         return $configuration;
     }
 
-    public function getWikiDir()
-    {
-        return dirname(dirname(dirname(__DIR__)));
-    }
-
     public function baseUrl()
     {
         return $this->wiki->config['base_url'] . $this->wiki->tag;
