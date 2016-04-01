@@ -7,35 +7,9 @@ class PackageCore extends Package
     const FILE_2_IGNORE = array('.', '..', 'tools', 'files', 'cache', 'themes',
         'wakka.config.php');
 
-    private $localRelease = null;
-
-    public function updateAvailable()
+    public function upgrade()
     {
-        if ($this->release->compare($this->localRelease()) > 0) {
-            return true;
-        }
-        return false;
-    }
-
-    public function localRelease()
-    {
-        if ($this->localRelease !== null) {
-            return $this->localRelease;
-        }
-
-        $configuration = new Configuration('wakka.config.php');
-        $configuration->load();
-
-        $release = Release::UNKNOW_RELEASE;
-        if (isset($configuration['yeswiki_release'])) {
-            $release = $configuration['yeswiki_release'];
-        }
-        $this->localRelease = new Release($release);
-        return $this->localRelease;
-    }
-
-    public function upgrade($desPath)
-    {
+        $desPath = $this->localPath();
         if ($this->tmpPath === null) {
             throw new \Exception("Le paquet n'a pas été décompressé.", 1);
         }
@@ -56,15 +30,10 @@ class PackageCore extends Package
         return true;
     }
 
-    public function installed()
-    {
-        return true;
-    }
-
-    public function upgradeTools($desPath)
+    public function upgradeTools()
     {
         $src = $this->tmpPath . '/tools';
-        $desPath .= '/tools';
+        $desPath .= $this->localPath() . '/tools';
         $file2ignore = array('.', '..');
         // TODO : Ajouter un message par outils mis à jour.
         if ($res = opendir($src)) {
@@ -88,5 +57,40 @@ class PackageCore extends Package
     public function name()
     {
         return $this::CORE_NAME;
+    }
+
+    protected function localRelease()
+    {
+        if ($this->localRelease !== null) {
+            return $this->localRelease;
+        }
+
+        $configuration = new Configuration('wakka.config.php');
+        $configuration->load();
+
+        $release = Release::UNKNOW_RELEASE;
+        if (isset($configuration['yeswiki_release'])) {
+            $release = $configuration['yeswiki_release'];
+        }
+        $this->localRelease = new Release($release);
+        return $this->localRelease;
+    }
+
+    protected function updateAvailable()
+    {
+        if ($this->release->compare($this->localRelease()) > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    protected function installed()
+    {
+        return true;
+    }
+
+    protected function localPath()
+    {
+        return dirname(dirname(dirname(__DIR__)));
     }
 }

@@ -12,17 +12,17 @@
                 {{ tool.name() }}
             </td>
             <td>
-                {% if tool.installed() %}
-                    {{ tool.localRelease() }}
+                {% if tool.installed %}
+                    {{ tool.localRelease }}
                 {% else %}
                     {{ AU_ABSENT }}
                 {% endif %}
             </td>
             <td>
-                {{ tool.release() }}
+                {{ tool.release }}
             </td>
             <td>
-                {% if isAdmin and tool.updateAvailable() and tool.installed() %}
+                {% if isAdmin and tool.updateAvailable and tool.installed %}
                     <a  href="{{ baseUrl }}{{ tool.updateLink() }}"
                         class="btn btn-primary btn-sm"
                         title="{{ AU_UPDATE }}"
@@ -31,7 +31,7 @@
                     </a>
                 {% endif %}
 
-                {% if isAdmin and not tool.updateAvailable() and tool.installed() %}
+                {% if isAdmin and not tool.updateAvailable and tool.installed %}
                     <a  href="{{ baseUrl }}{{ tool.updateLink() }}"
                         class="btn btn-warning btn-sm"
                         title="{{ AU_FORCE_UPDATE }}"
@@ -40,8 +40,8 @@
                     </a>
                 {% endif %}
 
-                {% if isAdmin and not tool.installed() %}
-                    <a  href="{{ baseUrl }}{{ tool.updateLink() }}"
+                {% if isAdmin and not tool.installed %}
+                    <a  href="{{ baseUrl }}{{ tool.updateLink }}"
                         class="btn btn-primary btn-sm"
                         title="{{ AU__INSTALL }}"
                     >

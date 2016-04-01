@@ -12,19 +12,32 @@ abstract class Package extends Files
     // Chemin vers le paquet temporaire téléchargé localement
     protected $tmpFile = null;
     // nom du tool
-    public $name = null;
+    protected $name = null;
     // Version du paquet
-    protected $release;
+    public $release;
+    public $localRelease;
+    public $installed;
+    public $updateAvailable;
 
-    abstract public function upgrade($desPath);
-    abstract public function updateAvailable();
-    abstract public function localRelease();
-    abstract public function installed();
+    abstract public function upgrade();
+
+    abstract protected function localRelease();
+    abstract protected function updateAvailable();
+    abstract protected function installed();
+    abstract protected function localPath();
 
     public function __construct($release, $address)
     {
         $this->release = $release;
         $this->address = $address;
+        $this->localRelease = $this->localRelease();
+        $this->installed = $this->installed();
+        $this->updateAvailable = $this->updateAvailable();
+    }
+
+    public function checkACL()
+    {
+        return $this->isWritable($this->localPath());
     }
 
     public function checkIntegrity()
@@ -61,11 +74,6 @@ abstract class Package extends Files
         return $this->name;
     }
 
-    public function release()
-    {
-        return $this->release;
-    }
-
     public function extract()
     {
         if ($this->tmpFile === null) {
@@ -85,6 +93,11 @@ abstract class Package extends Files
 
         return $this->tmpPath;
     }
+
+
+    /****************************************************************************
+     * Méthodes privées
+     **************************************************************************/
 
     private function getMD5()
     {

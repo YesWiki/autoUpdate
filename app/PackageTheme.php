@@ -3,17 +3,14 @@ namespace AutoUpdate;
 
 class PackageTheme extends PackageExt
 {
-    const THEME_PATH = 'themes/';
-
-    public function upgrade($desPath)
-    {
-        // TODO
-        $desPath = $desPath;
-        return false;
-    }
+    const THEME_PATH = '/themes/';
 
     protected function localPath()
     {
-        return $this::THEME_PATH . $this->name() . '/';
+        return
+            dirname(dirname(dirname(__DIR__)))
+            . $this::THEME_PATH
+            . $this->name()
+            . '/';
     }
 }

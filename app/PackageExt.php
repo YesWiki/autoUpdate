@@ -7,35 +7,31 @@ abstract class PackageExt extends Package
 
     protected $infos = null;
 
-    abstract protected function localPath();
-
-    public function updateAvailable()
+    public function upgrade()
     {
-        if ($this->installed()) {
-            if ($this->release->compare($this->localRelease()) > 0) {
-                return true;
-            }
+        $desPath = $this->localPath();
+
+        $this->deletePackage();
+        mkdir($desPath);
+
+        if ($this->tmpPath === null) {
+            throw new \Exception("Le paquet n'a pas été décompressé.", 1);
         }
-        return false;
+
+        $this->copy(
+            $this->tmpPath . '/' . $this->name(),
+            $desPath
+        );
+
+        return true;
     }
 
-    public function localRelease()
+    public function deletePackage()
     {
-        if ($this->installed()) {
-            $infos = $this->getInfos();
-            if (isset($infos['release'])) {
-                return $infos['release'];
-            }
+        $desPath = $this->localPath();
+        if (is_dir($desPath)) {
+            $this->delete($desPath);
         }
-        return new Release(Release::UNKNOW_RELEASE);
-    }
-
-    public function installed()
-    {
-        if (is_dir($this->localPath())) {
-            return true;
-        }
-        return false;
     }
 
     protected function getInfos()
@@ -51,5 +47,34 @@ abstract class PackageExt extends Package
             $this->infos = json_decode($json, true);
         }
         return $this->infos;
+    }
+
+    protected function localRelease()
+    {
+        if ($this->installed()) {
+            $infos = $this->getInfos();
+            if (isset($infos['release'])) {
+                return $infos['release'];
+            }
+        }
+        return new Release(Release::UNKNOW_RELEASE);
+    }
+
+    protected function installed()
+    {
+        if (is_dir($this->localPath())) {
+            return true;
+        }
+        return false;
+    }
+
+    protected function updateAvailable()
+    {
+        if ($this->installed()) {
+            if ($this->release->compare($this->localRelease()) > 0) {
+                return true;
+            }
+        }
+        return false;
     }
 }

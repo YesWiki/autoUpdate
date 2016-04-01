@@ -21,7 +21,7 @@ class Controller
         $this->messages = $messages;
     }
 
-    public function run($get, $filter = "all")
+    public function run($get)
     {
         if (!isset($get['autoupdate'])) {
             $get['autoupdate'] = "default";
@@ -33,48 +33,28 @@ class Controller
             return;
         }
 
-        switch ($get['autoupdate']) {
-            case 'upgrade':
-                if ($this->autoUpdate->isAdmin()) {
-                    $this->upgrade();
-                    $view = new ViewUpdate($this->autoUpdate, $this->messages);
-                    $view->show();
-                }
-                break;
-
-            default:
-                switch ($filter) {
-                    case 'core':
-                        # code...
-                        break;
-
-                    case 'tools':
-                        # code...
-                        break;
-
-                    case 'themes':
-                        # code...
-                        break;
-
-                    default:
-                        $view = new ViewStatus($this->autoUpdate, $this->messages);
-                        $view->show();# code...
-                        break;
-                }
-
-                break;
+        if (isset($get['upgrade'])
+            and $this->autoUpdate->isAdmin()
+        ) {
+            $this->upgrade($get['upgrade']);
+            $view = new ViewUpdate($this->autoUpdate, $this->messages);
+            $view->show();
+            return;
         }
+
+        $view = new ViewStatus($this->autoUpdate, $this->messages);
+        $view->show();
     }
 
-    private function upgrade()
+    private function upgrade($packageName)
     {
         // Remise a zéro des messages
         $this->messages->reset();
 
-        $corePackage = $this->autoUpdate->repository->getPackage('yeswiki');
+        $package = $this->autoUpdate->repository->getPackage($packageName);
 
         // Téléchargement de l'archive
-        $file = $corePackage->getFile();
+        $file = $package->getFile();
         if (false === $file) {
             $this->messages->add('AU_DOWNLOAD', 'AU_ERROR');
             return;
@@ -82,14 +62,14 @@ class Controller
         $this->messages->add('AU_DOWNLOAD', 'AU_OK');
 
         // Vérification MD5
-        if (!$corePackage->checkIntegrity($file)) {
+        if (!$package->checkIntegrity($file)) {
             $this->messages->add('AU_INTEGRITY', 'AU_ERROR');
             return;
         }
         $this->messages->add('AU_INTEGRITY', 'AU_OK');
 
         // Extraction de l'archive
-        $path = $corePackage->extract();
+        $path = $package->extract();
         if (false === $path) {
             $this->messages->add('AU_EXTRACT', 'AU_ERROR');
             return;
@@ -97,23 +77,26 @@ class Controller
         $this->messages->add('AU_EXTRACT', 'AU_OK');
 
         // Vérification des droits sur le fichiers
-        if (!$this->autoUpdate->checkFilesACL($path)) {
+        if (!$package->checkACL()) {
             $this->messages->add('AU_ACL', 'AU_ERROR');
             return;
         }
         $this->messages->add('AU_ACL', 'AU_OK');
 
-        $wikiPath = $this->autoUpdate->getWikiDir();
-
         // Mise à jour du coeur du wiki
-        if (!$corePackage->upgrade($wikiPath)) {
-            $this->messages->add('AU_UPDATE_YESWIKI', 'AU_ERROR');
+        if (!$package->upgrade()) {
+            $this->messages->add(
+                _t('AU_UPDATE_PACKAGE') . $packageName,
+                'AU_ERROR'
+            );
             return;
         }
-        $this->messages->add('AU_UPDATE_YESWIKI', 'AU_OK');
+        $this->messages->add(_t('AU_UPDATE_PACKAGE') . $packageName, 'AU_OK');
+
+        // Uniquement si c'est un package type Core
 
         // Mise à jour du coeur du wiki
-        if (!$corePackage->upgradeConf(
+        /*if (!$package->upgradeConf(
             $this->autoUpdate->getWikiConfiguration()
         )) {
             $this->messages->add('AU_UPDATE_CONF', 'AU_ERROR');
@@ -122,10 +105,10 @@ class Controller
         $this->messages->add('AU_UPDATE_CONF', 'AU_OK');
 
         // Mise à jour des tools.
-        if (!$corePackage->upgradeTools($wikiPath)) {
+        if (!$package->upgradeTools($wikiPath)) {
             $this->messages->add('AU_UPDATE_TOOL', 'AU_ERROR');
             return;
         }
-        $this->messages->add('AU_UPDATE_TOOL', 'AU_OK');
+        $this->messages->add('AU_UPDATE_TOOL', 'AU_OK');*/
     }
 }

@@ -3,17 +3,14 @@ namespace AutoUpdate;
 
 class PackageTool extends PackageExt
 {
-    const TOOL_PATH = 'tools/';
-
-    public function upgrade($desPath)
-    {
-        // TODO
-        $desPath = $desPath;
-        return false;
-    }
+    const TOOL_PATH = '/tools/';
 
     protected function localPath()
     {
-        return $this::TOOL_PATH . $this->name() . '/';
+        return
+            dirname(dirname(dirname(__DIR__)))
+            . $this::TOOL_PATH
+            . $this->name()
+            . '/';
     }
 }

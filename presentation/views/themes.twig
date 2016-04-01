@@ -12,17 +12,17 @@
                 {{ theme.name() }}
             </td>
             <td>
-                {% if theme.installed() %}
-                    {{ theme.localRelease() }}
+                {% if theme.installed %}
+                    {{ theme.localRelease }}
                 {% else %}
                     {{ AU_ABSENT }}
                 {% endif %}
             </td>
             <td>
-                {{ theme.release() }}
+                {{ theme.release }}
             </td>
             <td>
-                {% if isAdmin and theme.updateAvailable() and theme.installed() %}
+                {% if isAdmin and theme.updateAvailable and theme.installed %}
                     <a  href="{{ baseUrl }}{{ theme.updateLink() }}"
                         class="btn btn-primary btn-sm"
                         title="{{ AU_UPDATE }}"
@@ -31,7 +31,7 @@
                     </a>
                 {% endif %}
 
-                {% if isAdmin and theme.installed() and not theme.updateAvailable() %}
+                {% if isAdmin and theme.installed and not theme.updateAvailable %}
                     <a  href="{{ baseUrl }}{{ theme.updateLink() }}"
                         class="btn btn-warning btn-sm"
                         title="{{ AU_FORCE_UPDATE }}"
@@ -40,7 +40,7 @@
                     </a>
                 {% endif %}
 
-                {% if isAdmin and not theme.installed() %}
+                {% if isAdmin and not theme.installed %}
                     <a  href="{{ baseUrl }}{{ theme.updateLink() }}"
                         class="btn btn-primary btn-sm"
                         title="{{ AU__INSTALL }}"

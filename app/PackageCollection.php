@@ -14,6 +14,13 @@ class PackageCollection extends Collection
         $this->list[$package->name()] = $package;
     }
 
+    public function getPackage($packageName)
+    {
+        if (isset($this->list[$packageName])) {
+            return $this->list[$packageName];
+        }
+    }
+
     public function getCorePackage()
     {
         if (isset($this->list['yeswiki'])) {
