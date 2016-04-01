@@ -7,6 +7,16 @@ abstract class PackageExt extends Package
 
     protected $infos = null;
 
+    abstract protected function localPath();
+
+    public function __construct($release, $address)
+    {
+        parent::__construct($release, $address);
+        $this->installed = $this->installed();
+        $this->localPath = dirname(dirname(dirname(__DIR__)));
+        $this->updateAvailable = $this->updateAvailable();
+    }
+
     public function upgrade()
     {
         $desPath = $this->localPath();
@@ -60,20 +70,10 @@ abstract class PackageExt extends Package
         return new Release(Release::UNKNOW_RELEASE);
     }
 
-    protected function installed()
+    private function installed()
     {
         if (is_dir($this->localPath())) {
             return true;
-        }
-        return false;
-    }
-
-    protected function updateAvailable()
-    {
-        if ($this->installed()) {
-            if ($this->release->compare($this->localRelease()) > 0) {
-                return true;
-            }
         }
         return false;
     }

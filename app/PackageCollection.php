@@ -11,7 +11,7 @@ class PackageCollection extends Collection
     {
         $className = $this->getPackageType($file);
         $package = new $className($release, $address . $file);
-        $this->list[$package->name()] = $package;
+        $this->list[$package->name] = $package;
     }
 
     public function getPackage($packageName)

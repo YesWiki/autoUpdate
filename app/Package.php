@@ -12,27 +12,26 @@ abstract class Package extends Files
     // Chemin vers le paquet temporaire téléchargé localement
     protected $tmpFile = null;
     // nom du tool
-    protected $name = null;
+    public $name = null;
     // Version du paquet
     public $release;
     public $localRelease;
-    public $installed;
-    public $updateAvailable;
+    public $installed = false;
+    public $updateAvailable = false;
+    public $updateLink;
 
     abstract public function upgrade();
 
     abstract protected function localRelease();
-    abstract protected function updateAvailable();
-    abstract protected function installed();
-    abstract protected function localPath();
+    //abstract protected function updateAvailable();
 
     public function __construct($release, $address)
     {
         $this->release = $release;
         $this->address = $address;
+        $this->name = $this->name();
+        $this->updateLink = '&upgrade=' . $this->name;
         $this->localRelease = $this->localRelease();
-        $this->installed = $this->installed();
-        $this->updateAvailable = $this->updateAvailable();
     }
 
     public function checkACL()
@@ -61,19 +60,6 @@ abstract class Package extends Files
         return false;
     }
 
-    public function updateLink()
-    {
-        return '&upgrade=' . $this->name();
-    }
-
-    public function name()
-    {
-        if ($this->name === null) {
-                $this->name = explode('-', basename($this->address, '.zip'))[1];
-        }
-        return $this->name;
-    }
-
     public function extract()
     {
         if ($this->tmpFile === null) {
@@ -98,6 +84,11 @@ abstract class Package extends Files
     /****************************************************************************
      * Méthodes privées
      **************************************************************************/
+    protected function name()
+    {
+        return explode('-', basename($this->address, '.zip'))[1];
+    }
+
 
     private function getMD5()
     {
@@ -109,5 +100,15 @@ abstract class Package extends Files
     {
         $this->tmpFile = tempnam(sys_get_temp_dir(), $this::PREFIX_FILENAME);
         file_put_contents($this->tmpFile, fopen($sourceUrl, 'r'));
+    }
+
+    protected function updateAvailable()
+    {
+        if ($this->installed) {
+            if ($this->release->compare($this->localRelease()) > 0) {
+                return true;
+            }
+        }
+        return false;
     }
 }

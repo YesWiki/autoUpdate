@@ -7,13 +7,21 @@ class PackageCore extends Package
     const FILE_2_IGNORE = array('.', '..', 'tools', 'files', 'cache', 'themes',
         'wakka.config.php');
 
+    public function __construct($release, $address)
+    {
+        parent::__construct($release, $address);
+        $this->installed = true;
+        $this->localPath = dirname(dirname(dirname(__DIR__)));
+        $this->name = $this::CORE_NAME;
+        $this->updateAvailable = $this->updateAvailable();
+    }
+
     public function upgrade()
     {
         $desPath = $this->localPath();
         if ($this->tmpPath === null) {
             throw new \Exception("Le paquet n'a pas été décompressé.", 1);
         }
-
         $this->tmpPath .= '/';
         if ($res = opendir($this->tmpPath)) {
             while (($file = readdir($res)) !== false) {
@@ -35,7 +43,7 @@ class PackageCore extends Package
         $src = $this->tmpPath . '/tools';
         $desPath .= $this->localPath() . '/tools';
         $file2ignore = array('.', '..');
-        // TODO : Ajouter un message par outils mis à jour.
+
         if ($res = opendir($src)) {
             while (($file = readdir($res)) !== false) {
                 // Ignore les fichiers de la liste
@@ -48,23 +56,20 @@ class PackageCore extends Package
         return true;
     }
 
-    public function upgradeConf($configuration)
+    public function upgradeConf()
     {
-        $configuration['yeswiki_release'] = $this->version();
+        $configuration = new Configuration('wakka.config.php');
+        $configuration->load();
+        $configuration['yeswiki_release'] = $this->release;
         return $configuration->write();
     }
 
-    public function name()
-    {
-        return $this::CORE_NAME;
-    }
+    /***************************************************************************
+     * Méthodes privée
+     **************************************************************************/
 
     protected function localRelease()
     {
-        if ($this->localRelease !== null) {
-            return $this->localRelease;
-        }
-
         $configuration = new Configuration('wakka.config.php');
         $configuration->load();
 
@@ -72,8 +77,8 @@ class PackageCore extends Package
         if (isset($configuration['yeswiki_release'])) {
             $release = $configuration['yeswiki_release'];
         }
-        $this->localRelease = new Release($release);
-        return $this->localRelease;
+        $release = new Release($release);
+        return $release;
     }
 
     protected function updateAvailable()
@@ -82,15 +87,5 @@ class PackageCore extends Package
             return true;
         }
         return false;
-    }
-
-    protected function installed()
-    {
-        return true;
-    }
-
-    protected function localPath()
-    {
-        return dirname(dirname(dirname(__DIR__)));
     }
 }

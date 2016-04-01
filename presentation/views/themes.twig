@@ -9,7 +9,7 @@
       {% for theme in themes %}
         <tr>
             <td>
-                {{ theme.name() }}
+                {{ theme.name }}
             </td>
             <td>
                 {% if theme.installed %}
@@ -23,7 +23,7 @@
             </td>
             <td>
                 {% if isAdmin and theme.updateAvailable and theme.installed %}
-                    <a  href="{{ baseUrl }}{{ theme.updateLink() }}"
+                    <a  href="{{ baseUrl }}{{ theme.updateLink }}"
                         class="btn btn-primary btn-sm"
                         title="{{ AU_UPDATE }}"
                     >
@@ -32,7 +32,7 @@
                 {% endif %}
 
                 {% if isAdmin and theme.installed and not theme.updateAvailable %}
-                    <a  href="{{ baseUrl }}{{ theme.updateLink() }}"
+                    <a  href="{{ baseUrl }}{{ theme.updateLink }}"
                         class="btn btn-warning btn-sm"
                         title="{{ AU_FORCE_UPDATE }}"
                     >
@@ -41,9 +41,9 @@
                 {% endif %}
 
                 {% if isAdmin and not theme.installed %}
-                    <a  href="{{ baseUrl }}{{ theme.updateLink() }}"
-                        class="btn btn-primary btn-sm"
-                        title="{{ AU__INSTALL }}"
+                    <a  href="{{ baseUrl }}{{ theme.updateLink }}"
+                        class="btn btn-success btn-sm"
+                        title="{{ AU_INSTALL }}"
                     >
                         {{ AU_INSTALL }}
                     </a>

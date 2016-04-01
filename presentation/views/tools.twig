@@ -9,7 +9,7 @@
       {% for tool in tools %}
         <tr>
             <td>
-                {{ tool.name() }}
+                {{ tool.name }}
             </td>
             <td>
                 {% if tool.installed %}
@@ -23,7 +23,7 @@
             </td>
             <td>
                 {% if isAdmin and tool.updateAvailable and tool.installed %}
-                    <a  href="{{ baseUrl }}{{ tool.updateLink() }}"
+                    <a  href="{{ baseUrl }}{{ tool.updateLink }}"
                         class="btn btn-primary btn-sm"
                         title="{{ AU_UPDATE }}"
                     >
@@ -32,7 +32,7 @@
                 {% endif %}
 
                 {% if isAdmin and not tool.updateAvailable and tool.installed %}
-                    <a  href="{{ baseUrl }}{{ tool.updateLink() }}"
+                    <a  href="{{ baseUrl }}{{ tool.updateLink }}"
                         class="btn btn-warning btn-sm"
                         title="{{ AU_FORCE_UPDATE }}"
                     >
@@ -42,8 +42,8 @@
 
                 {% if isAdmin and not tool.installed %}
                     <a  href="{{ baseUrl }}{{ tool.updateLink }}"
-                        class="btn btn-primary btn-sm"
-                        title="{{ AU__INSTALL }}"
+                        class="btn btn-success btn-sm"
+                        title="{{ AU_INSTALL }}"
                     >
                         {{ AU_INSTALL }}
                     </a>
