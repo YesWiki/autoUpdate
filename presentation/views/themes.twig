@@ -5,6 +5,7 @@
         <th>Version installée</th>
         <th>Version disponible</th>
         <th></th>
+        <th></th>
   </tr>
       {% for theme in themes %}
         <tr>
@@ -33,7 +34,7 @@
 
                 {% if isAdmin and theme.installed and not theme.updateAvailable %}
                     <a  href="{{ baseUrl }}{{ theme.updateLink }}"
-                        class="btn btn-warning btn-sm"
+                        class="btn btn-success btn-sm"
                         title="{{ AU_FORCE_UPDATE }}"
                     >
                         {{ AU_FORCE_UPDATE }}
@@ -42,10 +43,20 @@
 
                 {% if isAdmin and not theme.installed %}
                     <a  href="{{ baseUrl }}{{ theme.updateLink }}"
-                        class="btn btn-success btn-sm"
+                        class="btn btn-warning btn-sm"
                         title="{{ AU_INSTALL }}"
                     >
                         {{ AU_INSTALL }}
+                    </a>
+                {% endif %}
+            </td>
+            <td>
+                {% if isAdmin and theme.installed %}
+                    <a  href="{{ baseUrl }}{{ theme.deleteLink }}"
+                        class="btn btn-danger btn-sm"
+                        title="{{ AU_DELETE_EXT }}"
+                    >
+                        {{ AU_DELETE_EXT }}
                     </a>
                 {% endif %}
             </td>

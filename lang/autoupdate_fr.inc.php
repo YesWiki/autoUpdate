@@ -29,5 +29,7 @@ $GLOBALS['translations'] = array_merge(
         'AU_ERROR' => "Erreur",
         'AU_UNKNOW' => "Inconnue",
         'AU_ABSENT' => "Non installé",
+        'AU_DELETE_EXT' => "Supprimer",
+        'AU_DELETE' => "Suppression des fichiers",
     )
 );

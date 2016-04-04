@@ -7,6 +7,8 @@ abstract class PackageExt extends Package
 
     protected $infos = null;
 
+    public $deleteLink;
+
     abstract protected function localPath();
 
     public function __construct($release, $address)
@@ -15,6 +17,7 @@ abstract class PackageExt extends Package
         $this->installed = $this->installed();
         $this->localPath = dirname(dirname(dirname(__DIR__)));
         $this->updateAvailable = $this->updateAvailable();
+        $this->deleteLink = '&delete=' . $this->name;
     }
 
     public function upgrade()

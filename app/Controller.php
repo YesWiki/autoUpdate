@@ -42,8 +42,29 @@ class Controller
             return;
         }
 
+        if (isset($get['delete'])
+            and $this->autoUpdate->isAdmin()
+        ) {
+            $this->delete($get['delete']);
+            $view = new ViewUpdate($this->autoUpdate, $this->messages);
+            $view->show();
+            return;
+        }
+
         $view = new ViewStatus($this->autoUpdate, $this->messages);
         $view->show();
+    }
+
+    private function delete($packageName)
+    {
+        $this->messages->reset();
+        $package = $this->autoUpdate->repository->getPackage($packageName);
+
+        if (false === $package->deletePackage()) {
+            $this->messages->add('AU_DELETE', 'AU_ERROR');
+            return;
+        }
+        $this->messages->add('AU_DELETE', 'AU_OK');
     }
 
     private function upgrade($packageName)
@@ -83,7 +104,7 @@ class Controller
         }
         $this->messages->add('AU_ACL', 'AU_OK');
 
-        // Mise à jour du coeur du wiki
+        // Mise à jour du paquet
         if (!$package->upgrade()) {
             $this->messages->add(
                 _t('AU_UPDATE_PACKAGE') . $packageName,
