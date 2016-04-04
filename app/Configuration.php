@@ -24,12 +24,16 @@ class Configuration extends Collection
             $file = $this->file;
         }
 
-        //TODO gérer les sous tableaux (utiliser var_export)
-        $content = "<?php\n" . "\$$arrayName = array(\n";
-        foreach ($this->list as $key => $value) {
-            $content .= "    \"" . $key . "\" => \"" . $value . "\",\n";
-        }
-        $content .= ");\n";
+        // Bidouille pour eviter l'export de classe par var_export mais
+        // uniquement de la valeur
+        $release = $this->list['yeswiki_release'];
+        $this->list['yeswiki_release'] = (string)$this->list['yeswiki_release'];
+        $content = "<?php\n" . "\$$arrayName = ";
+        $content .= var_export($this->list, true);
+        $content .= ";\n";
+
+        $this->list['yeswiki_release'] = $release;
+
         if (file_put_contents($file, $content) === false) {
             return false;
         }
