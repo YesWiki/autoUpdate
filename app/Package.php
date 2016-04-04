@@ -37,7 +37,7 @@ abstract class Package extends Files
 
     public function checkACL()
     {
-        return $this->isWritable($this->localPath());
+        return $this->isWritable($this->localPath);
     }
 
     public function checkIntegrity()

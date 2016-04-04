@@ -18,7 +18,7 @@ class PackageCore extends Package
 
     public function upgrade()
     {
-        $desPath = $this->localPath();
+        $desPath = $this->localPath;
         if ($this->tmpPath === null) {
             throw new \Exception("Le paquet n'a pas été décompressé.", 1);
         }
@@ -41,7 +41,7 @@ class PackageCore extends Package
     public function upgradeTools()
     {
         $src = $this->tmpPath . '/tools';
-        $desPath .= $this->localPath() . '/tools';
+        $desPath .= $this->localPath . '/tools';
         $file2ignore = array('.', '..');
 
         if ($res = opendir($src)) {
@@ -62,6 +62,11 @@ class PackageCore extends Package
         $configuration->load();
         $configuration['yeswiki_release'] = $this->release;
         return $configuration->write();
+    }
+
+    public function name()
+    {
+        return $this::CORE_NAME;
     }
 
     /***************************************************************************
