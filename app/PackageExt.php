@@ -27,12 +27,12 @@ abstract class PackageExt extends Package
         $this->deletePackage();
         mkdir($desPath);
 
-        if ($this->tmpPath === null) {
+        if ($this->extractionPath === null) {
             throw new \Exception("Le paquet n'a pas été décompressé.", 1);
         }
 
         $this->copy(
-            $this->tmpPath . '/' . $this->name(),
+            $this->extractionPath . '/' . $this->name(),
             $desPath
         );
 
