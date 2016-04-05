@@ -85,6 +85,14 @@ abstract class Package extends Files
         return $this->extractionPath;
     }
 
+    public function cleanTempFiles()
+    {
+        $this->delete($this->downloadedFile);
+        $this->delete($this->extractionPath);
+        $this->downloadedFile = null;
+        $this->extractionPath = null;
+    }
+
 
     /****************************************************************************
      * Méthodes privées

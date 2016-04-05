@@ -129,5 +129,7 @@ class Controller
             return;
         }
         $this->messages->add('AU_UPDATE_INFOS', 'AU_OK');
+
+        $package->cleanTempFiles();
     }
 }
