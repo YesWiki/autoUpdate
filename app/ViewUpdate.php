@@ -14,6 +14,7 @@ class ViewUpdate extends View
     {
         $infos = array(
             'messages' => $this->messages,
+            'baseUrl' => $this->autoUpdate->baseUrl(),
         );
         return $infos;
     }

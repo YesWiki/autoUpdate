@@ -19,7 +19,7 @@ abstract class View
     public function show()
     {
         $infos = $this->grabInformations();
-        echo $this->twig->render($this->template . ".tpl.html", $infos);
+        echo $this->twig->render($this->template . ".twig", $infos);
     }
 
     abstract protected function grabInformations();

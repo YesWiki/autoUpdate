@@ -1,24 +1,20 @@
 <?php
 namespace AutoUpdate;
 
-class Repository
+class Repository extends PackageCollection
 {
     const INDEX_FILENAME = 'packages.json';
 
     private $address;
-    public $packages = null;
 
     public function __construct($address)
     {
-        $this->address = $address;
+        $this->address = $address . '/';
     }
 
     public function load()
     {
-        $this->address .= '/';
-        $this->packages = new PackageCollection();
-
-        $data = array();
+        $this->list = array();
 
         if (filter_var($this->address, FILTER_VALIDATE_URL) === false) {
             return false;
@@ -36,28 +32,15 @@ class Repository
             return false;
         }
 
-        $this->packages = new PackageCollection();
-
-        foreach ($data as $infos) {
-            // TODO : condition A supprimer une fois les dépots a jour
-            $version = new Version($infos['version']);
-            $this->packages->add($version, $this->address, $infos['file']);
+        foreach ($data as $packageInfos) {
+            $release = new Release($packageInfos['version']);
+            $this->add(
+                $release,
+                $this->address,
+                $packageInfos['file']
+            );
         }
 
         return true;
-    }
-
-    public function getPackage($name)
-    {
-        if ($this->packages === null) {
-            throw new \Exception("Liste des paquets non initialisée", 1);
-        }
-
-        if (isset($this->packages[$name])) {
-            return $this->packages[$name];
-        }
-
-        return false;
-
     }
 }

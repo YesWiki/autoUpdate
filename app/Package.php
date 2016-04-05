@@ -1,7 +1,7 @@
 <?php
 namespace AutoUpdate;
 
-abstract class Package
+abstract class Package extends Files
 {
     const PREFIX_FILENAME = 'yeswiki_';
 
@@ -12,18 +12,32 @@ abstract class Package
     // Chemin vers le paquet temporaire téléchargé localement
     protected $tmpFile = null;
     // nom du tool
-    public $name = "";
+    public $name = null;
     // Version du paquet
-    protected $version;
+    public $release;
+    public $localRelease;
+    public $installed = false;
+    public $updateAvailable = false;
+    public $updateLink;
 
-    abstract public function upgrade($desPath);
-    abstract protected function name();
+    abstract public function upgrade();
+    abstract public function upgradeInfos();
 
-    public function __construct($version, $address)
+    abstract protected function localRelease();
+    //abstract protected function updateAvailable();
+
+    public function __construct($release, $address)
     {
-        $this->version = new Version($version);
+        $this->release = $release;
         $this->address = $address;
         $this->name = $this->name();
+        $this->updateLink = '&upgrade=' . $this->name;
+        $this->localRelease = $this->localRelease();
+    }
+
+    public function checkACL()
+    {
+        return $this->isWritable($this->localPath);
     }
 
     public function checkIntegrity()
@@ -47,11 +61,6 @@ abstract class Package
         return false;
     }
 
-    public function version()
-    {
-        return $this->version;
-    }
-
     public function extract()
     {
         if ($this->tmpFile === null) {
@@ -63,16 +72,24 @@ abstract class Package
             return false;
         }
 
-        $files = new Files();
-        $this->tmpPath = $files->tmpdir();
+        $this->tmpPath = $this->tmpdir();
         if (true !== $zip->extractTo($this->tmpPath)) {
             return false;
         }
-
         $zip->close();
 
-        return $files->tmpdir();
+        return $this->tmpPath;
     }
+
+
+    /****************************************************************************
+     * Méthodes privées
+     **************************************************************************/
+    protected function name()
+    {
+        return explode('-', basename($this->address, '.zip'))[1];
+    }
+
 
     private function getMD5()
     {
@@ -84,5 +101,15 @@ abstract class Package
     {
         $this->tmpFile = tempnam(sys_get_temp_dir(), $this::PREFIX_FILENAME);
         file_put_contents($this->tmpFile, fopen($sourceUrl, 'r'));
+    }
+
+    protected function updateAvailable()
+    {
+        if ($this->installed) {
+            if ($this->release->compare($this->localRelease()) > 0) {
+                return true;
+            }
+        }
+        return false;
     }
 }

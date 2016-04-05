@@ -1,15 +1,16 @@
 <?php
 namespace AutoUpdate;
 
-class PackageTool extends Package
+class PackageTool extends PackageExt
 {
-    public function upgrade($desPath)
-    {
-        #dummy
-    }
+    const TOOL_PATH = '/tools/';
 
-    protected function name()
+    protected function localPath()
     {
-        return 'Tool';
+        return
+            dirname(dirname(dirname(__DIR__)))
+            . $this::TOOL_PATH
+            . $this->name
+            . '/';
     }
 }

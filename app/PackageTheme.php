@@ -1,15 +1,16 @@
 <?php
 namespace AutoUpdate;
 
-class PackageTheme extends Package
+class PackageTheme extends PackageExt
 {
-    public function upgrade($desPath)
-    {
-        #dummy TODO
-    }
+    const THEME_PATH = '/themes/';
 
-    protected function name()
+    protected function localPath()
     {
-        return 'theme';
+        return
+            dirname(dirname(dirname(__DIR__)))
+            . $this::THEME_PATH
+            . $this->name
+            . '/';
     }
 }

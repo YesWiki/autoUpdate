@@ -11,4 +11,4 @@ $autoUpdate = new AutoUpdate($this);
 $messages = new Messages();
 $controller = new Controller($autoUpdate, $messages);
 
-$controller->run($_GET);
+$controller->run($_GET, $this->getParameter('filter'));

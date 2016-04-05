@@ -11,19 +11,25 @@ class ViewStatus extends View
 
     protected function grabInformations()
     {
-        $corePackage = $this->autoUpdate->repository->getPackage('yeswiki');
-
         $infos = array(
-            'wikiVersion' => $this->autoUpdate->getYesWikiRelease(),
-            'repoVersion' => $corePackage->version(),
-            'link' => "?wiki=" . $_GET['wiki'] . "&autoupdate=upgrade",
+            'baseUrl' => $this->autoUpdate->baseUrl(),
             'isAdmin' => $this->autoUpdate->isAdmin(),
-            'isNewVersion' => $this->autoUpdate->isNewVersion(),
             'AU_UPDATE' => _t('AU_UPDATE'),
             'AU_FORCE_UPDATE' => _t('AU_FORCE_UPDATE'),
             'AU_WARNING' => _t('AU_WARNING'),
             'AU_VERSION_REPO' => _t('AU_VERSION_REPO'),
             'AU_VERSION_WIKI' => _t('AU_VERSION_WIKI'),
+            'AU_INSTALL' => _t('AU_INSTALL'),
+            'AU_ABSENT' => _t('AU_ABSENT'),
+            'AU_DELETE_EXT' => _t('AU_DELETE_EXT'),
+            'core' => $this->autoUpdate->repository->getCorePackage(),
+            'themes' =>
+                $this->autoUpdate->repository->getThemesPackages(),
+            'tools' =>
+                $this->autoUpdate->repository->getToolsPackages(),
+            'showCore' => true,
+            'showThemes' => true,
+            'showTools' => true,
         );
         return $infos;
     }
