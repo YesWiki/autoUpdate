@@ -15,7 +15,7 @@ abstract class PackageExt extends Package
     {
         parent::__construct($release, $address);
         $this->installed = $this->installed();
-        $this->localPath = dirname(dirname(dirname(__DIR__)));
+        $this->localPath = $this->localPath();
         $this->updateAvailable = $this->updateAvailable();
         $this->deleteLink = '&delete=' . $this->name;
     }

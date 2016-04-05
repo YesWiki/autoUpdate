@@ -3,9 +3,13 @@
 {% endif %}
 
 {% if showThemes %}
-    {% include 'themes.twig' %}
+<h2>Thèmes</h2>
+    {% set exts = themes %}
+    {% include 'exts.twig' %}
 {% endif %}
 
 {% if showTools %}
-    {% include 'tools.twig' %}
+<h2>Tools (extensions)</h2>
+    {% set exts = tools %}
+    {% include 'exts.twig' %}
 {% endif %}
