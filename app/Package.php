@@ -19,6 +19,8 @@ abstract class Package extends Files
     public $installed = false;
     public $updateAvailable = false;
     public $updateLink;
+    public $description = "";
+    public $documentation = "";
 
     abstract public function upgrade();
     abstract public function upgradeInfos();
@@ -26,10 +28,12 @@ abstract class Package extends Files
     abstract protected function localRelease();
     //abstract protected function updateAvailable();
 
-    public function __construct($release, $address)
+    public function __construct($release, $address, $desc, $doc)
     {
         $this->release = $release;
         $this->address = $address;
+        $this->description = $desc;
+        $this->documentation = $doc;
         $this->name = $this->name();
         $this->updateLink = '&upgrade=' . $this->name;
         $this->localRelease = $this->localRelease();

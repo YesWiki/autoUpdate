@@ -22,6 +22,7 @@ class ViewStatus extends View
             'AU_INSTALL' => _t('AU_INSTALL'),
             'AU_ABSENT' => _t('AU_ABSENT'),
             'AU_DELETE_EXT' => _t('AU_DELETE_EXT'),
+            'AU_DOCUMENTATION_LINK' => _t('AU_DOCUMENTATION_LINK'),
             'core' => $this->autoUpdate->repository->getCorePackage(),
             'themes' =>
                 $this->autoUpdate->repository->getThemesPackages(),

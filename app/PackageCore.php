@@ -7,9 +7,9 @@ class PackageCore extends Package
     const FILE_2_IGNORE = array('.', '..', 'tools', 'files', 'cache', 'themes',
         'wakka.config.php');
 
-    public function __construct($release, $address)
+    public function __construct($release, $address, $desc, $doc)
     {
-        parent::__construct($release, $address);
+        parent::__construct($release, $address, $desc, $doc);
         $this->installed = true;
         $this->localPath = dirname(dirname(dirname(__DIR__)));
         $this->name = $this::CORE_NAME;
