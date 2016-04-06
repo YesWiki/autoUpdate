@@ -7,10 +7,15 @@ class PackageCollection extends Collection
     const TOOL_CLASS = 'AutoUpdate\PackageTool';
     const CORE_CLASS = 'AutoUpdate\PackageCore';
 
-    public function add($release, $address, $file)
+    public function add($release, $address, $file, $description, $documentation)
     {
         $className = $this->getPackageType($file);
-        $package = new $className($release, $address . $file);
+        $package = new $className(
+            $release,
+            $address . $file,
+            $description,
+            $documentation
+        );
         $this->list[$package->name] = $package;
     }
 

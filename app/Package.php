@@ -8,9 +8,9 @@ abstract class Package extends Files
     // URL vers le fichier dans le dépôt.
     protected $address;
     // Chemin vers le dossier temporaire ou est décompressé le paquet
-    protected $tmpPath = null;
+    protected $extractionPath = null;
     // Chemin vers le paquet temporaire téléchargé localement
-    protected $tmpFile = null;
+    protected $downloadedFile = null;
     // nom du tool
     public $name = null;
     // Version du paquet
@@ -19,6 +19,8 @@ abstract class Package extends Files
     public $installed = false;
     public $updateAvailable = false;
     public $updateLink;
+    public $description = "";
+    public $documentation = "";
 
     abstract public function upgrade();
     abstract public function upgradeInfos();
@@ -26,10 +28,12 @@ abstract class Package extends Files
     abstract protected function localRelease();
     //abstract protected function updateAvailable();
 
-    public function __construct($release, $address)
+    public function __construct($release, $address, $desc, $doc)
     {
         $this->release = $release;
         $this->address = $address;
+        $this->description = $desc;
+        $this->documentation = $doc;
         $this->name = $this->name();
         $this->updateLink = '&upgrade=' . $this->name;
         $this->localRelease = $this->localRelease();
@@ -42,11 +46,11 @@ abstract class Package extends Files
 
     public function checkIntegrity()
     {
-        if ($this->tmpFile === null) {
+        if ($this->downloadedFile === null) {
             throw new \Exception("Le paquet n'a pas été téléchargé.", 1);
         }
         $md5Repo = $this->getMD5();
-        $md5File = md5_file($this->tmpFile);
+        $md5File = md5_file($this->downloadedFile);
         return ($md5File === $md5Repo);
     }
 
@@ -54,31 +58,39 @@ abstract class Package extends Files
     {
         $this->downloadFile($this->address);
 
-        if (is_file($this->tmpFile)) {
-            return $this->tmpFile;
+        if (is_file($this->downloadedFile)) {
+            return $this->downloadedFile;
         }
-        $this->tmpFile = null;
+        $this->downloadedFile = null;
         return false;
     }
 
     public function extract()
     {
-        if ($this->tmpFile === null) {
+        if ($this->downloadedFile === null) {
             throw new \Exception("Le paquet n'a pas été téléchargé.", 1);
         }
 
         $zip = new \ZipArchive;
-        if (true !== $zip->open($this->tmpFile)) {
+        if (true !== $zip->open($this->downloadedFile)) {
             return false;
         }
 
-        $this->tmpPath = $this->tmpdir();
-        if (true !== $zip->extractTo($this->tmpPath)) {
+        $this->extractionPath = $this->tmpdir();
+        if (true !== $zip->extractTo($this->extractionPath)) {
             return false;
         }
         $zip->close();
 
-        return $this->tmpPath;
+        return $this->extractionPath;
+    }
+
+    public function cleanTempFiles()
+    {
+        $this->delete($this->downloadedFile);
+        $this->delete($this->extractionPath);
+        $this->downloadedFile = null;
+        $this->extractionPath = null;
     }
 
 
@@ -99,8 +111,8 @@ abstract class Package extends Files
 
     private function downloadFile($sourceUrl)
     {
-        $this->tmpFile = tempnam(sys_get_temp_dir(), $this::PREFIX_FILENAME);
-        file_put_contents($this->tmpFile, fopen($sourceUrl, 'r'));
+        $this->downloadedFile = tempnam(sys_get_temp_dir(), $this::PREFIX_FILENAME);
+        file_put_contents($this->downloadedFile, fopen($sourceUrl, 'r'));
     }
 
     protected function updateAvailable()

@@ -11,9 +11,9 @@ abstract class PackageExt extends Package
 
     abstract protected function localPath();
 
-    public function __construct($release, $address)
+    public function __construct($release, $address, $desc, $doc)
     {
-        parent::__construct($release, $address);
+        parent::__construct($release, $address, $desc, $doc);
         $this->installed = $this->installed();
         $this->localPath = $this->localPath();
         $this->updateAvailable = $this->updateAvailable();
@@ -27,12 +27,12 @@ abstract class PackageExt extends Package
         $this->deletePackage();
         mkdir($desPath);
 
-        if ($this->tmpPath === null) {
+        if ($this->extractionPath === null) {
             throw new \Exception("Le paquet n'a pas été décompressé.", 1);
         }
 
         $this->copy(
-            $this->tmpPath . '/' . $this->name(),
+            $this->extractionPath . '/' . $this->name(),
             $desPath
         );
 

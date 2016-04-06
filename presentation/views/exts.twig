@@ -9,7 +9,12 @@
       {% for ext in exts %}
         <tr>
             <td>
-                {{ ext.name }}
+                <strong>{{ ext.name }}</strong>
+                <a class="small" href="{{ ext.documentation }}">
+                    ({{ AU_DOCUMENTATION_LINK }})
+                </a>
+                <br />
+                <small>{{ ext.description }}</small>
             </td>
             <td>
                 {% if ext.installed %}

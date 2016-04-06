@@ -7,9 +7,9 @@ class PackageCore extends Package
     const FILE_2_IGNORE = array('.', '..', 'tools', 'files', 'cache', 'themes',
         'wakka.config.php');
 
-    public function __construct($release, $address)
+    public function __construct($release, $address, $desc, $doc)
     {
-        parent::__construct($release, $address);
+        parent::__construct($release, $address, $desc, $doc);
         $this->installed = true;
         $this->localPath = dirname(dirname(dirname(__DIR__)));
         $this->name = $this::CORE_NAME;
@@ -19,16 +19,16 @@ class PackageCore extends Package
     public function upgrade()
     {
         $desPath = $this->localPath;
-        if ($this->tmpPath === null) {
+        if ($this->extractionPath === null) {
             throw new \Exception("Le paquet n'a pas été décompressé.", 1);
         }
-        $this->tmpPath .= '/';
-        if ($res = opendir($this->tmpPath)) {
+        $this->extractionPath .= '/';
+        if ($res = opendir($this->extractionPath)) {
             while (($file = readdir($res)) !== false) {
                 // Ignore les fichiers de la liste
                 if (!in_array($file, $this::FILE_2_IGNORE)) {
                     $this->copy(
-                        $this->tmpPath . '/' . $file,
+                        $this->extractionPath . '/' . $file,
                         $desPath . '/' . $file
                     );
                 }
@@ -40,7 +40,7 @@ class PackageCore extends Package
 
     public function upgradeTools()
     {
-        $src = $this->tmpPath . '/tools';
+        $src = $this->extractionPath . '/tools';
         $desPath .= $this->localPath . '/tools';
         $file2ignore = array('.', '..');
 
