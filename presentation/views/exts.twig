@@ -29,35 +29,28 @@
             <td>
                 {% if isAdmin and ext.updateAvailable and ext.installed %}
                     <a  href="{{ baseUrl }}{{ ext.updateLink }}"
-                        class="btn btn-success btn-xs"
+                        class="btn btn-success"
                         title="{{ AU_UPDATE }}"
                     >
                         {{ AU_UPDATE }}
                     </a>
                 {% endif %}
 
-                {% if isAdmin and ext.installed and not ext.updateAvailable %}
-                    <a  href="{{ baseUrl }}{{ ext.updateLink }}"
-                        class="btn btn-warning btn-xs"
-                        title="{{ AU_FORCE_UPDATE }}"
-                    >
-                        {{ AU_FORCE_UPDATE }}
-                    </a>
-                {% endif %}
 
+            </td>
+            <td>
                 {% if isAdmin and not ext.installed %}
                     <a  href="{{ baseUrl }}{{ ext.updateLink }}"
-                        class="btn btn-primary btn-xs"
+                        class="btn btn-primary"
                         title="{{ AU_INSTALL }}"
                     >
                         {{ AU_INSTALL }}
                     </a>
                 {% endif %}
-            </td>
-            <td>
+
                 {% if isAdmin and ext.installed %}
                     <a  href="{{ baseUrl }}{{ ext.deleteLink }}"
-                        class="btn btn-danger btn-xs"
+                        class="btn btn-danger"
                         title="{{ AU_DELETE_EXT }}"
                     >
                         {{ AU_DELETE_EXT }}
