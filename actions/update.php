@@ -7,8 +7,14 @@ if (!defined("WIKINI_VERSION")) {
     die("acc&egrave;s direct interdit");
 }
 
-$autoUpdate = new AutoUpdate($this);
-$messages = new Messages();
-$controller = new Controller($autoUpdate, $messages);
+$autoUpdate = new AutoUpdate(
+    new Configuration('wakka.config.php'),
+    $this->userIsAdmin()
+);
+
+$controller = new Controller(
+    $autoUpdate,
+    new Messages()
+);
 
 $controller->run($_GET, $this->getParameter('filter'));

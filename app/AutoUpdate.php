@@ -6,12 +6,14 @@ class AutoUpdate
     const DEFAULT_REPO = 'http://yeswiki.net/repository/';
     const DEFAULT_VERS = 'Cercopitheque'; // Pour gérer les vielles version de
                                           // YesWiki
-    private $wiki;
+    private $isUserAdmin;
+    public $config;
     public $repository = null;
 
-    public function __construct($wiki)
+    public function __construct($config, $isUserAdmin)
     {
-        $this->wiki = $wiki;
+        $this->isUserAdmin = $isUserAdmin;
+        $this->config = $config;
     }
 
     public function initRepository()
@@ -22,26 +24,17 @@ class AutoUpdate
 
     public function isAdmin()
     {
-        return $this->wiki->UserIsAdmin();
-    }
-
-    public function getWikiConfiguration()
-    {
-        $configuration = new Configuration(
-            $this->getWikiDir() . '/wakka.config.php'
-        );
-        $configuration->load();
-        return $configuration;
+        return $this->isUserAdmin;
     }
 
     public function baseUrl()
     {
-        return $this->wiki->config['base_url'] . $this->wiki->tag;
-    }
-
-    private function getWikiDir()
-    {
-        return dirname(dirname(dirname(__DIR__)));
+        // TODO Ne pas utiliser $_GET
+        if (isset($_GET['wiki'])) {
+            return $this->config['base_url'] . $_GET['wiki'];
+        }
+        // Nous ne devrions jamais arriver ici.
+        throw new Exception("baseUrl request in non-wiki context", 1);
     }
 
     private function repositoryAddress()
