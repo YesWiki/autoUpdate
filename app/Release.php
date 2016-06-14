@@ -28,7 +28,7 @@ class Release
             return 0;
         }
 
-        $releaseToCompare = $this->evalRelease($releaseToCompare);
+        $releaseToCompare = $this->evalRelease($releaseToCompare->release);
         $release = $this->evalRelease($this->release);
 
         for ($i = 0; $i < 4; $i++) {
