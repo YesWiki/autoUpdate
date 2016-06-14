@@ -14,6 +14,11 @@ class Configuration extends Collection
     {
         include $this->file;
         if (isset($wakkaConfig)) {
+            if(isset($wakkaConfig['yeswiki_release']))
+            {
+                $wakkaConfig['yeswiki_release'] =
+                    new Release($wakkaConfig['yeswiki_release']);
+            }
             $this->list = $wakkaConfig;
         }
     }
