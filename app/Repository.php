@@ -32,19 +32,22 @@ class Repository extends PackageCollection
             return false;
         }
 
-
-
         foreach ($data as $packageInfos) {
             if (!isset($packageInfos['description'])) {
                 $packageInfos['description'] = _t('AU_NO_DESCRIPTION');
             }
             $release = new Release($packageInfos['version']);
+
+            if(!isset($packageInfos['documentation'])) {
+                $packageInfos['documentation'] = "";
+            }
+
             $this->add(
                 $release,
                 $this->address,
                 $packageInfos['file'],
                 $packageInfos['description'],
-                $packageInfos['documenation']
+                $packageInfos['documentation']
             );
         }
 
