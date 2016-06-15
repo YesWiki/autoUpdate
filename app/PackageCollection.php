@@ -26,6 +26,11 @@ class PackageCollection extends Collection
         }
     }
 
+    public function getPackages()
+    {
+        return $this->list;
+    }
+
     public function getCorePackage()
     {
         if (isset($this->list['yeswiki'])) {
