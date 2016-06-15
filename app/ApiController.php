@@ -18,6 +18,12 @@ class ApiController
         $this->autoUpdate = $autoUpdate;
     }
 
+    /**
+     * [run description]
+     * @param  [type] $method [description]
+     * @param  [type] $route  [description]
+     * @return [type]         [description]
+     */
     public function run($method, $route)
     {
         if (!$this->autoUpdate->initRepository()) {
@@ -45,7 +51,12 @@ class ApiController
         $this->$method($route->identity);
     }
 
-    private function getPackages($name)
+    /**
+     * Send back package's informations
+     * @param  string $name package's name or empty string for all.
+     * @return array       Informations about packages.
+     */
+    private function getPackages($name = "")
     {
         $data = array();
         if ($name === "") {
@@ -66,20 +77,105 @@ class ApiController
         (new ApiResponse(400))->send();
     }
 
+    /**
+     * Install package if possible.
+     * @param  string $name package's name
+     * @return [type]       [description]
+     */
     private function postPackages($name)
     {
-        (new ApiResponse(501))->send();
+        // Package don't exist.
+        if (!$package = $this->autoUpdate->repository->getPackage($name)) {
+            (new ApiResponse(404))->send();
+            return;
+        }
+        // Already installed
+        if ($package->installed) {
+            (new ApiResponse(406))->send();
+            return;
+        }
+
+        // Téléchargement de l'archive
+        $file = $package->getFile();
+        if (false === $file) {
+            (new ApiResponse(500))->send();
+            return;
+        }
+
+        // Vérification MD5
+        if (!$package->checkIntegrity($file)) {
+            (new ApiResponse(500))->send();
+            return;
+        }
+
+        // Extraction de l'archive
+        $path = $package->extract();
+        if (false === $path) {
+            (new ApiResponse(500))->send();
+            return;
+        }
+
+        // Vérification des droits sur le fichiers
+        if (!$package->checkACL()) {
+            (new ApiResponse(500))->send();
+            return;
+        }
+
+        // Mise à jour du paquet
+        if (!$package->upgrade()) {
+            (new ApiResponse(500))->send();
+            return;
+        }
+
+        if (get_class($package) === PackageCollection::CORE_CLASS) {
+            // Mise à jour des tools.
+            if (!$package->upgradeTools()) {
+                (new ApiResponse(500))->send();
+                return;
+            }
+        }
+
+        // Mise à jour de la configuration de YesWiki
+        if (!$package->upgradeInfos()) {
+            (new ApiResponse(500))->send();
+            return;
+        }
+
+        (new ApiResponse(200))->send();
     }
 
-    private function putPackages($name)
+    /**
+     * Update package or reinstall (only if already installed)
+     * @param  string $name package's name, empty for all (only if installed)
+     * @return [type]       [description]
+     */
+    private function putPackages($name = "")
     {
-        (new ApiResponse(501))->send();
+        $this->deletePackages($name);
+        $this->postPackages($name);
     }
 
     private function deletePackages($name)
     {
-        (new ApiResponse(501))->send();
+        // Package don't exist.
+        if (!$package = $this->autoUpdate->repository->getPackage($name)) {
+            (new ApiResponse(404))->send();
+            return;
+        }
+        // Not installed
+        if (!$package->installed) {
+            (new ApiResponse(406))->send();
+            return;
+        }
+
+        if (false === $package->deletePackage()) {
+            (new ApiResponse(500))->send();
+            return;
+        }
+
+        (new ApiResponse(200))->send();
     }
+
 
     private function isValidMethod($method)
     {
