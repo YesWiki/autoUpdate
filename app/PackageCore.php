@@ -58,7 +58,7 @@ class PackageCore extends Package
 
     public function upgradeInfos()
     {
-        $configuration = new Configuration('wakka.config.php');
+        $configuration = new Configuration($this->getConfigPath());
         $configuration->load();
         $configuration['yeswiki_release'] = $this->release;
         return $configuration->write();
@@ -75,7 +75,7 @@ class PackageCore extends Package
 
     protected function localRelease()
     {
-        $configuration = new Configuration('wakka.config.php');
+        $configuration = new Configuration($this->getConfigPath());
         $configuration->load();
 
         $release = Release::UNKNOW_RELEASE;
@@ -92,5 +92,20 @@ class PackageCore extends Package
             return true;
         }
         return false;
+    }
+
+    /**
+     * Return the path to config file depending on context (API or Wiki).
+     * @return string path to yeswiki config file
+     */
+    private function getConfigPath()
+    {
+        $path = "wakka.config.php";
+        // If call in API the script's path is in 'tools' folder.
+        if (basename(dirname(getcwd())) === "tools")
+        {
+            $path = '../../' . $path;
+        }
+        return $path;
     }
 }
