@@ -7,10 +7,10 @@ if (!defined("WIKINI_VERSION")) {
     die("acc&egrave;s direct interdit");
 }
 
-$autoUpdate = new AutoUpdate(
-    new Configuration('wakka.config.php'),
-    $this->userIsAdmin()
-);
+$configuration = new Configuration('wakka.config.php');
+$configuration->load();
+
+$autoUpdate = new AutoUpdate($configuration, $this->userIsAdmin());
 
 $controller = new Controller(
     $autoUpdate,

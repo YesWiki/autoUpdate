@@ -9,10 +9,11 @@ function _t($textkey)
     return $textkey;
 }
 
-$autoUpdate = new AutoUpdate(
-    new Configuration('../../wakka.config.php'),
-    false // TODO : Check token and set true if is valid
-);
+$configuration = new Configuration('wakka.config.php');
+$configuration->load();
+
+ // TODO : Check token and set true if is valid
+$autoUpdate = new AutoUpdate($configuration, false);
 
 $controller = new ApiController($autoUpdate);
 
