@@ -67,7 +67,7 @@ class PackageCollection extends Collection
                 return $this::CORE_CLASS;
                 break;
 
-            case 'tool':
+            case 'extension':
                 return $this::TOOL_CLASS;
                 break;
 
