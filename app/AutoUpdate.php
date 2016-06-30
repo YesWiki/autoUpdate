@@ -3,6 +3,8 @@ namespace AutoUpdate;
 
 class AutoUpdate
 {
+    const PARAM_NAME_REPO = 'yeswiki_repository';
+    const PARAM_NAME_VERS = 'yeswiki_version';
     const DEFAULT_REPO = 'http://yeswiki.net/repository/';
     const DEFAULT_VERS = 'Cercopitheque'; // Pour gérer les vielles version de
                                           // YesWiki
@@ -41,8 +43,8 @@ class AutoUpdate
     {
         $repositoryAddress = $this::DEFAULT_REPO;
 
-        if (isset($this->wiki->config['yeswiki_repository'])) {
-            $repositoryAddress = $this->wiki->config['yeswiki_repository'];
+        if (isset($this->config[$this::PARAM_NAME_REPO])) {
+            $repositoryAddress = $this->config[$this::PARAM_NAME_REPO];
         }
 
         if (substr($repositoryAddress, -1, 1) !== '/') {
@@ -56,8 +58,8 @@ class AutoUpdate
     private function getYesWikiVersion()
     {
         $version = $this::DEFAULT_VERS;
-        if (isset($this->wiki->config['yeswiki_version'])) {
-            $version = $this->wiki->config['yeswiki_version'];
+        if (isset($this->config[$this::PARAM_NAME_VERS])) {
+            $version = $this->config[$this::PARAM_NAME_VERS];
         }
         return strtolower($version);
     }
