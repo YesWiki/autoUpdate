@@ -11,6 +11,6 @@ if (isset($metadatas['lang'])) {
     $wakkaConfig['lang'] = 'fr';
 }
 
-include_once 'tools/autoUpdate/lang/autoupdate_'
+include_once 'tools/autoupdate/lang/autoupdate_'
     . $wakkaConfig['lang']
     . '.inc.php';

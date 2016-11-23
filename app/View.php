@@ -3,7 +3,7 @@ namespace AutoUpdate;
 
 abstract class View
 {
-    private $viewsPath = "tools/autoUpdate/presentation/views/";
+    private $viewsPath = "tools/autoupdate/presentation/views/";
     private $twig;
 
     protected $autoUpdate;
