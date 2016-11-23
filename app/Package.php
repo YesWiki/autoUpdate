@@ -106,7 +106,7 @@ abstract class Package extends Files
     private function getMD5()
     {
         $disMd5File = file_get_contents($this->address . '.md5');
-        return explode('  ', $disMd5File)[0];
+        return explode(' ', $disMd5File)[0];
     }
 
     private function downloadFile($sourceUrl)
