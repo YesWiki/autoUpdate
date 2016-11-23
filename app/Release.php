@@ -4,7 +4,7 @@ namespace AutoUpdate;
 class Release
 {
     const UNKNOW_RELEASE = "0000-00-00-0";
-    private $release;
+    public $release;
 
     public function __construct($release)
     {
@@ -28,7 +28,7 @@ class Release
             return 0;
         }
 
-        $releaseToCompare = $this->evalRelease($releaseToCompare);
+        $releaseToCompare = $this->evalRelease($releaseToCompare->release);
         $release = $this->evalRelease($this->release);
 
         for ($i = 0; $i < 4; $i++) {
