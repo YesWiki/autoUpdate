@@ -1,6 +1,7 @@
 {
     "name": "autoupdate",
     "description": "Mise à jour automatique de YesWiki",
+    "license": "MIT",
     "authors": [
         {
             "name": "Florestan Bredow",
