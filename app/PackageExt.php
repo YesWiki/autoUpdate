@@ -78,7 +78,7 @@ abstract class PackageExt extends Package
         if ($this->installed()) {
             $infos = $this->getInfos();
             if (isset($infos['release'])) {
-                return $infos['release'];
+                return new Release($infos['release']);
             }
         }
         return new Release(Release::UNKNOW_RELEASE);
@@ -86,7 +86,7 @@ abstract class PackageExt extends Package
 
     private function installed()
     {
-        if (is_dir($this->localPath())) {
+        if (is_dir($this->localPath())) {t
             return true;
         }
         return false;
